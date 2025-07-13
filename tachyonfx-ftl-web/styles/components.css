@@ -4,9 +4,50 @@
     padding: 10px 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     font-size: 14px;
     border-bottom: 1px solid #3c3836;
+}
+
+.backend-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.backend-label {
+    color: #a89984;
+    font-size: 12px;
+}
+
+.backend-link {
+    color: #d5c4a1;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.backend-link:hover {
+    color: #fabd2f;
+    background-color: rgba(215, 153, 33, 0.1);
+}
+
+.backend-link.active {
+    color: #fabd2f;
+    background-color: rgba(215, 153, 33, 0.2);
+    font-weight: bold;
+}
+
+.backend-separator {
+    color: #665c54;
+    font-size: 12px;
+}
+
+.github-links {
+    display: flex;
+    align-items: center;
 }
 
 .github-header a {
