@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Add WebAssembly target
       run: rustup target add wasm32-unknown-unknown
@@ -33,7 +33,7 @@ jobs:
     needs: build
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Add WebAssembly target
       run: rustup target add wasm32-unknown-unknown
