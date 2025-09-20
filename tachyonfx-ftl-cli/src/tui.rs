@@ -1,9 +1,9 @@
-use std::io;
-use std::sync::mpsc;
 use crate::event_handler::EventHandler;
 use ratatui::layout::Size;
-use ratatui::{Frame, Terminal};
 use ratatui::prelude::Backend;
+use ratatui::{Frame, Terminal};
+use std::io;
+use std::sync::mpsc;
 
 #[cfg(feature = "web-backend")]
 use ratzilla::WebRenderer;
@@ -13,7 +13,7 @@ use tfxed_core::AppEvent;
 ///
 /// It is responsible for setting up the terminal,
 /// initializing the interface and handling the draw events.
-pub struct Tui<BACKEND : Backend> {
+pub struct Tui<BACKEND: Backend> {
     /// Interface to the Terminal.
     terminal: Terminal<BACKEND>,
     /// Terminal event handler.
@@ -29,10 +29,7 @@ impl<BACKEND: Backend + 'static> Tui<BACKEND> {
         self.events.sender()
     }
 
-    pub fn draw(
-        &mut self,
-        render_ui: impl FnMut(&mut Frame),
-    ) -> io::Result<()> {
+    pub fn draw(&mut self, render_ui: impl FnMut(&mut Frame)) -> io::Result<()> {
         self.terminal.draw(render_ui)?;
         Ok(())
     }
@@ -52,9 +49,12 @@ impl<BACKEND: Backend + 'static> Tui<BACKEND> {
     /// iterates over all currently available events; waits
     /// until at least one event is available.
     pub fn receive_events<F>(&self, mut f: F)
-        where F: FnMut(AppEvent)
+    where
+        F: FnMut(AppEvent),
     {
         f(self.events.next().unwrap());
-        while let Some(event) = self.events.try_next() { f(event) }
+        while let Some(event) = self.events.try_next() {
+            f(event)
+        }
     }
 }

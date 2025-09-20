@@ -1,19 +1,21 @@
-use std::error::Error;
-use std::sync::mpsc::Sender;
-use ansi_to_tui::IntoText;
-use ratatui::buffer::Buffer;
-use ratatui::Frame;
-use ratatui::layout::{Alignment, Offset, Rect};
-use ratatui::prelude::{Color, style::Stylize, Style};
-use ratatui::text::Text;
-use ratatui::widgets::{Block, BorderType, Paragraph, Widget};
-use tachyonfx::{ref_count, BufferRenderer, CenteredShrink, Duration, Effect, EffectManager, RefCount};
-use tachyonfx::dsl::EffectDsl;
-use tachyonfx::fx::consume_tick;
 use crate::effects::{display_dsl_error, EffectKind};
 use crate::event::{AppEvent, KeyCode, KeyEvent};
 use crate::gruvbox::Gruvbox;
 use crate::widgets::Ruler;
+use ansi_to_tui::IntoText;
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Alignment, Offset, Rect};
+use ratatui::prelude::{style::Stylize, Color, Style};
+use ratatui::text::Text;
+use ratatui::widgets::{Block, BorderType, Paragraph, Widget};
+use ratatui::Frame;
+use std::error::Error;
+use std::sync::mpsc::Sender;
+use tachyonfx::dsl::EffectDsl;
+use tachyonfx::fx::consume_tick;
+use tachyonfx::{
+    ref_count, BufferRenderer, CenteredShrink, Duration, Effect, EffectManager, RefCount,
+};
 
 #[cfg(feature = "web-backend")]
 use wasm_bindgen::prelude::*;
@@ -76,16 +78,14 @@ impl App {
         self.reset_canvas_work_buffer();
         self.update_effects();
 
-        let canvas_size = self.canvas_work_buf
-            .borrow()
-            .area()
-            .as_size();
+        let canvas_size = self.canvas_work_buf.borrow().area().as_size();
 
         Ruler::new(canvas_size)
             .style(Style::new().fg(Gruvbox::dark2()))
             .render(frame.area(), &mut frame.buffer_mut());
 
-        self.canvas_work_buf.borrow()
+        self.canvas_work_buf
+            .borrow()
             .render_buffer(Offset { x: 2, y: 2 }, &mut frame.buffer_mut());
         // .render_buffer(Offset { x: x as _, y: y as _ }, &mut frame.buffer_mut());
     }
@@ -93,7 +93,8 @@ impl App {
     /// updates the work buffer with the contents of the base buffer.
     fn reset_canvas_work_buffer(&self) {
         let mut buf = self.canvas_work_buf.borrow_mut();
-        self.canvas_base_buf.borrow()
+        self.canvas_base_buf
+            .borrow()
             .render_buffer(Offset::default(), &mut buf);
     }
 
@@ -136,7 +137,10 @@ impl App {
             AppEvent::Tick => {
                 // Update the state based on the tick event
             }
-            AppEvent::KeyPress(KeyEvent { key_code: KeyCode::Esc, .. }) => {
+            AppEvent::KeyPress(KeyEvent {
+                key_code: KeyCode::Esc,
+                ..
+            }) => {
                 self.is_running = false;
             }
             AppEvent::KeyPress(KeyEvent { key_code, .. }) => {
@@ -145,9 +149,7 @@ impl App {
             AppEvent::UpdateCanvas(s) => self.update_canvas(s),
             AppEvent::CompileDsl(dsl) => {
                 // Compile the DSL and update the canvas
-                let effect = EffectDsl::new()
-                    .compiler()
-                    .compile(dsl.as_str());
+                let effect = EffectDsl::new().compiler().compile(dsl.as_str());
 
                 match effect {
                     Ok(effect) => {
@@ -157,12 +159,13 @@ impl App {
                         self.effects.add_unique_effect(Editor, effect);
 
                         // clear any old error popup
-                        self.effects.add_unique_effect(DslErrorPopup, consume_tick());
+                        self.effects
+                            .add_unique_effect(DslErrorPopup, consume_tick());
                     }
-                    Err(e)     => {
+                    Err(e) => {
                         println!("Error: {}", e);
                         println!("Error (context): {}", e.context());
-                        
+
                         // Create JSON-formatted error info
                         let error_info = format!(
                             "{{\"message\":\"{}\",\"line\":{},\"column\":{},\"line_end\":{},\"column_end\":{}}}",
@@ -195,8 +198,9 @@ impl App {
         position: (u32, u32),
     ) {
         let duration = Duration::from_millis(15000);
-        self.effects.add_unique_effect(EffectKind::DslErrorPopup,
-            display_dsl_error(duration, error_message, referenced_code, position)
+        self.effects.add_unique_effect(
+            EffectKind::DslErrorPopup,
+            display_dsl_error(duration, error_message, referenced_code, position),
         );
     }
 
@@ -206,7 +210,12 @@ impl App {
             std::process::exit(1);
         });
 
-        let w = input.lines.iter().map(|line| line.width()).max().unwrap_or(0);
+        let w = input
+            .lines
+            .iter()
+            .map(|line| line.width())
+            .max()
+            .unwrap_or(0);
         let h = input.lines.len();
 
         let area = Rect::new(0, 0, w as _, h as _);

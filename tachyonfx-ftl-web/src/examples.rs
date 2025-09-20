@@ -105,7 +105,8 @@ fn basic_slide_left() -> Example {
         title: "Slide from Left".to_string(),
         description: "Text slides in from the left side with gradient".to_string(),
         category: Category::Basic,
-        code: r#"fx::slide_in(Motion::LeftToRight, 10, 0, Color::Black, (1000, BackOut))"#.to_string(),
+        code: r#"fx::slide_in(Motion::LeftToRight, 10, 0, Color::Black, (1000, BackOut))"#
+            .to_string(),
         canvas: r#"▶ Sliding from the left!
 
 Watch this content move smoothly
@@ -127,7 +128,8 @@ fn basic_slide_right() -> Example {
         title: "Slide from Right".to_string(),
         description: "Text slides in from the right side with elastic motion".to_string(),
         category: Category::Basic,
-        code: r#"fx::slide_in(Motion::RightToLeft, 15, 5, Color::Gray, (1200, ElasticOut))"#.to_string(),
+        code: r#"fx::slide_in(Motion::RightToLeft, 15, 5, Color::Gray, (1200, ElasticOut))"#
+            .to_string(),
         canvas: r#"                    ◀ Sliding from the right!
 
            Content can slide from any direction.
@@ -173,7 +175,8 @@ fn fade_slide_combo() -> Example {
         title: "Sweep + Color Transition".to_string(),
         description: "Combines sweeping motion with color transitions".to_string(),
         category: Category::Transitions,
-        code: r#"fx::sweep_in(Motion::LeftToRight, 20, 10, Color::Blue, (800, CubicOut))"#.to_string(),
+        code: r#"fx::sweep_in(Motion::LeftToRight, 20, 10, Color::Blue, (800, CubicOut))"#
+            .to_string(),
         canvas: r#"◆ Smooth Sweeping Motion
 
 This text sweeps in with a color gradient,
@@ -205,11 +208,7 @@ and lightness over time.
 Watch the colors transform smoothly
 using HSL color space!"#
             .to_string(),
-        tags: vec![
-            "hsl".to_string(),
-            "color".to_string(),
-            "shift".to_string(),
-        ],
+        tags: vec!["hsl".to_string(), "color".to_string(), "shift".to_string()],
     }
 }
 
@@ -267,7 +266,8 @@ fn wave_effect() -> Example {
         title: "Infinite Loop".to_string(),
         description: "Effect that loops forever using repeating".to_string(),
         category: Category::Animations,
-        code: r#"fx::repeating(fx::hsl_shift_fg([60.0, 0.0, 10.0], (2000, SineInOut)))"#.to_string(),
+        code: r#"fx::repeating(fx::hsl_shift_fg([60.0, 0.0, 10.0], (2000, SineInOut)))"#
+            .to_string(),
         canvas: r#"🌊 Infinite Color Flow...
 
 ∿∿∿ Colors shift in endless waves ∿∿∿
@@ -343,7 +343,8 @@ fn parallel_effects() -> Example {
         description: "Using filters to target specific cells".to_string(),
         category: Category::Advanced,
         code: r#"fx::fade_to_fg(Color::Red, (1000, BackOut))
-    .with_filter(CellFilter::Text)"#.to_string(),
+    .with_filter(CellFilter::Text)"#
+            .to_string(),
         canvas: r#"⚡ FILTERED EFFECTS ⚡
 
 This effect only targets text characters,
@@ -453,7 +454,8 @@ fn glitch_effect() -> Example {
         title: "Never Complete".to_string(),
         description: "Effect that runs indefinitely".to_string(),
         category: Category::Showcase,
-        code: r#"fx::never_complete(fx::hsl_shift_fg([0.0, 50.0, 0.0], (2000, SineInOut)))"#.to_string(),
+        code: r#"fx::never_complete(fx::hsl_shift_fg([0.0, 50.0, 0.0], (2000, SineInOut)))"#
+            .to_string(),
         canvas: r#"G̴̰̈L̵̄I̶̓T̷̽C̸̈́H̴̾ ̵̎E̶̽F̷̈F̴̽E̵̐C̸̾T̷̏
 
 Digital corruption in progress...

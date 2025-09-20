@@ -1,9 +1,9 @@
 mod event_handler;
 mod tui;
 
+use ansi_to_tui::IntoText;
 use ratatui::style::Stylize;
 use std::io::Stdout;
-use ansi_to_tui::IntoText;
 
 use crate::event_handler::EventHandler;
 use crate::tui::Tui;
@@ -48,7 +48,5 @@ fn main() -> Result<()> {
 }
 
 fn terminal() -> Result<ratatui::DefaultTerminal> {
-    Ok(ratatui::try_init()
-        .wrap_err("failed to initialize terminal")?)
+    Ok(ratatui::try_init().wrap_err("failed to initialize terminal")?)
 }
-

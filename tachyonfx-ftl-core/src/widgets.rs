@@ -5,14 +5,14 @@ use ratatui::widgets::Widget;
 
 pub struct Ruler {
     measured: Size,
-    style: Style
+    style: Style,
 }
 
 impl Ruler {
     pub fn new(measured: Size) -> Self {
         Self {
             measured,
-            style: Style::default()
+            style: Style::default(),
         }
     }
 
@@ -30,11 +30,7 @@ impl Ruler {
     }
 }
 
-fn draw_rows(
-    area: Rect,
-    style: Style,
-    buf: &mut Buffer,
-) {
+fn draw_rows(area: Rect, style: Style, buf: &mut Buffer) {
     let mut draw_row = |x, y, width, buf: &mut Buffer| {
         (x..(x + width))
             .enumerate()
@@ -60,17 +56,13 @@ fn draw_rows(
             });
     };
 
-    draw_row_10(area.x + 2, area.y,            area.width - 4, buf);
-    draw_row(   area.x + 2, area.y + 1,        area.width - 4, buf);
-    draw_row(   area.x + 2, area.bottom() - 2, area.width - 4, buf);
+    draw_row_10(area.x + 2, area.y, area.width - 4, buf);
+    draw_row(area.x + 2, area.y + 1, area.width - 4, buf);
+    draw_row(area.x + 2, area.bottom() - 2, area.width - 4, buf);
     draw_row_10(area.x + 2, area.bottom() - 1, area.width - 4, buf);
 }
 
-fn draw_cols(
-    area: Rect,
-    style: Style,
-    buf: &mut Buffer,
-) {
+fn draw_cols(area: Rect, style: Style, buf: &mut Buffer) {
     let mut draw_col = |x, y, height, buf: &mut Buffer| {
         (y..(y + height))
             .enumerate()
@@ -96,16 +88,20 @@ fn draw_cols(
             });
     };
 
-    draw_col_10(area.x,           area.y + 2, area.height - 4, buf);
-    draw_col(   area.x + 1,       area.y + 2, area.height - 4, buf);
-    draw_col(   area.right() - 2, area.y + 2, area.height - 4, buf);
+    draw_col_10(area.x, area.y + 2, area.height - 4, buf);
+    draw_col(area.x + 1, area.y + 2, area.height - 4, buf);
+    draw_col(area.right() - 2, area.y + 2, area.height - 4, buf);
     draw_col_10(area.right() - 1, area.y + 2, area.height - 4, buf);
 }
 
 impl Widget for Ruler {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let ruler_area = self.ruler_area()
-            .offset(Offset { x: area.x as _, y: area.y as _ })
+        let ruler_area = self
+            .ruler_area()
+            .offset(Offset {
+                x: area.x as _,
+                y: area.y as _,
+            })
             .clamp(*buf.area());
 
         draw_rows(ruler_area, self.style, buf);

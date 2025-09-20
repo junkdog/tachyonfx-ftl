@@ -11,7 +11,7 @@ pub enum AppEvent {
 
 pub struct KeyEvent {
     pub key_code: KeyCode,
-    pub modifier_keys: ModifierKeys
+    pub modifier_keys: ModifierKeys,
 }
 
 pub enum KeyCode {

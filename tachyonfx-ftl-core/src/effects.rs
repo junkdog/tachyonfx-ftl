@@ -1,17 +1,17 @@
-use std::cmp::max;
+use crate::gruvbox::Gruvbox;
 use ratatui::layout::{Constraint, Layout, Margin, Rect};
 use ratatui::prelude::Color;
 use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span, Text};
 use ratatui::widgets::{Block, Clear, Padding};
+use std::cmp::max;
 use tachyonfx::{fx, Duration, Effect};
-use crate::gruvbox::Gruvbox;
 
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Ord, Eq, Default)]
 pub enum EffectKind {
     DslErrorPopup,
     #[default]
-    Editor
+    Editor,
 }
 
 pub fn display_dsl_error(
@@ -28,14 +28,17 @@ pub fn display_dsl_error(
     let h = 2           // padding top + bottom
         + message_lines // word-wrappig not handled
         + 1             // empty line
-        + code_lines;   // compilation error
+        + code_lines; // compilation error
 
-    let code_w = referenced_code.lines()
+    let code_w = referenced_code
+        .lines()
         .map(|line| line.len())
         .max()
-        .unwrap_or(0) + 6; // ~space req by position
+        .unwrap_or(0)
+        + 6; // ~space req by position
 
-    let msg_w = error_message.lines()
+    let msg_w = error_message
+        .lines()
         .map(|line| line.len())
         .max()
         .unwrap_or(0);
@@ -60,15 +63,12 @@ pub fn display_dsl_error(
         referenced_code: referenced_code.to_string(),
     };
 
-    fx::effect_fn_buf(state, duration, move | state, context, buf| {
+    fx::effect_fn_buf(state, duration, move |state, context, buf| {
         let popup_area = popup_area.intersection(*buf.area());
         Clear.render(popup_area.clone(), buf);
 
         Block::new()
-            .style(Style::new()
-                .fg(Gruvbox::light1())
-                .bg(Gruvbox::red_bright())
-            )
+            .style(Style::new().fg(Gruvbox::light1()).bg(Gruvbox::red_bright()))
             .padding(Padding::symmetric(1, 1))
             .render(popup_area.clone(), buf);
 
@@ -76,16 +76,21 @@ pub fn display_dsl_error(
             Constraint::Length(message_lines as u16),
             Constraint::Length(1),
             Constraint::Length(code_lines as u16),
-        ]).split(popup_area.inner(Margin::new(1, 1)));
+        ])
+        .split(popup_area.inner(Margin::new(1, 1)));
 
         // message
         Span::from(state.error_message.as_str())
-            .style(Style::new().fg(Gruvbox::light0()).add_modifier(Modifier::BOLD))
+            .style(
+                Style::new()
+                    .fg(Gruvbox::light0())
+                    .add_modifier(Modifier::BOLD),
+            )
             .render(layout[0], buf);
 
         // code
         Text::from(state.referenced_code.as_str())
-            .style(Style::new().fg(Gruvbox::light0_soft())
-        ).render(layout[2], buf);
+            .style(Style::new().fg(Gruvbox::light0_soft()))
+            .render(layout[2], buf);
     })
 }
