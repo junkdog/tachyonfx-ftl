@@ -17,6 +17,8 @@ web-sys = { workspace = true, features = ["Location", "Window", "console"] }
 wasm-bindgen = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
+flate2 = "1.0"
+base64 = "0.22"
 
 [[bin]]
 name = "tachyonfx-ftl-web"

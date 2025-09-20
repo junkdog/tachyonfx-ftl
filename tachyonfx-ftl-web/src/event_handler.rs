@@ -1,5 +1,5 @@
-use std::sync::mpsc;
 use ratzilla::event::KeyEvent as RatzillaKeyEvent;
+use std::sync::mpsc;
 use tfxed_core::{AppEvent, KeyCode, KeyEvent, ModifierKeys};
 
 #[derive(Debug)]
@@ -7,7 +7,6 @@ pub struct EventHandler {
     sender: mpsc::Sender<AppEvent>,
     receiver: mpsc::Receiver<AppEvent>,
 }
-
 
 impl EventHandler {
     pub fn new() -> Self {
@@ -25,27 +24,41 @@ impl EventHandler {
 
     pub fn try_next(&self) -> Option<AppEvent> {
         match self.receiver.try_recv() {
-            Ok(e)  => Some(e),
-            Err(_) => None
+            Ok(e) => Some(e),
+            Err(_) => None,
         }
     }
 
     /// iterates over all currently available events
     pub fn receive_events<F>(&self, mut f: F)
-        where F: FnMut(AppEvent)
+    where
+        F: FnMut(AppEvent),
     {
         // f(self.next().unwrap());
-        while let Some(event) = self.try_next() { f(event) }
+        while let Some(event) = self.try_next() {
+            f(event)
+        }
     }
 }
 
 pub fn convert_key_event(
-    RatzillaKeyEvent { code, ctrl, alt, shift }: RatzillaKeyEvent
+    RatzillaKeyEvent {
+        code,
+        ctrl,
+        alt,
+        shift,
+    }: RatzillaKeyEvent,
 ) -> KeyEvent {
     let mut modifier_keys = ModifierKeys::empty();
-    if ctrl  { modifier_keys |= ModifierKeys::CONTROL; }
-    if alt   { modifier_keys |= ModifierKeys::ALT; }
-    if shift { modifier_keys |= ModifierKeys::SHIFT; }
+    if ctrl {
+        modifier_keys |= ModifierKeys::CONTROL;
+    }
+    if alt {
+        modifier_keys |= ModifierKeys::ALT;
+    }
+    if shift {
+        modifier_keys |= ModifierKeys::SHIFT;
+    }
 
     use ratzilla::event::KeyCode as RzKeyCode;
     KeyEvent {
@@ -67,6 +80,6 @@ pub fn convert_key_event(
             RzKeyCode::Esc => KeyCode::Esc,
             RzKeyCode::Unidentified => KeyCode::Char(' '),
         },
-        modifier_keys
+        modifier_keys,
     }
 }

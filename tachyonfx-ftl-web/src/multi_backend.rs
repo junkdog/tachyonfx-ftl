@@ -1,6 +1,10 @@
-use ratatui::{Frame, Terminal as RatTerminal};
-use ratzilla::{CanvasBackend, WebGl2Backend, WebRenderer, backend::{canvas::CanvasBackendOptions, webgl2::WebGl2BackendOptions}, event::KeyEvent};
 use eyre::{eyre, Result};
+use ratatui::{Frame, Terminal as RatTerminal};
+use ratzilla::{
+    backend::{canvas::CanvasBackendOptions, webgl2::WebGl2BackendOptions},
+    event::KeyEvent,
+    CanvasBackend, WebGl2Backend, WebRenderer,
+};
 
 #[derive(Debug)]
 pub enum BackendType {
@@ -12,7 +16,7 @@ fn get_backend_type() -> BackendType {
     let window = web_sys::window().expect("no global window");
     let location = window.location();
     let search = location.search().unwrap_or_default();
-    
+
     if search.contains("backend=canvas") {
         BackendType::Canvas
     } else {
@@ -29,16 +33,16 @@ impl MultiBackend {
     pub fn new(grid_id: &str) -> Result<Self> {
         match get_backend_type() {
             BackendType::WebGl2 => {
-                let backend = WebGl2Backend::new_with_options(
-                    WebGl2BackendOptions::new().grid_id(grid_id)
-                ).map_err(|e| eyre!("{e}"))?;
+                let backend =
+                    WebGl2Backend::new_with_options(WebGl2BackendOptions::new().grid_id(grid_id))
+                        .map_err(|e| eyre!("{e}"))?;
                 let terminal = RatTerminal::new(backend)?;
                 Ok(MultiBackend::WebGl2(terminal))
             }
             BackendType::Canvas => {
-                let backend = CanvasBackend::new_with_options(
-                    CanvasBackendOptions::new().grid_id(grid_id)
-                ).map_err(|e| eyre!("{e}"))?;
+                let backend =
+                    CanvasBackend::new_with_options(CanvasBackendOptions::new().grid_id(grid_id))
+                        .map_err(|e| eyre!("{e}"))?;
                 let terminal = RatTerminal::new(backend)?;
                 Ok(MultiBackend::Canvas(terminal))
             }
