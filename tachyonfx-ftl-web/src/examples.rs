@@ -69,9 +69,7 @@ fn basic_fade_in() -> Example {
         title: "Fade In".to_string(),
         description: "Smoothly fade text from transparent to visible".to_string(),
         category: Category::Basic,
-        code: r#"fade_in(Duration::from_ms(1500))
-    .with_interpolation(QuadOut)"#
-            .to_string(),
+        code: r#"fx::fade_from_fg(Color::Black, (1500, QuadOut))"#.to_string(),
         canvas: r#"Welcome to TachyonFX!
 
 This text will fade in smoothly
@@ -79,7 +77,7 @@ using a quadratic easing curve.
 
 Perfect for gentle introductions!"#
             .to_string(),
-        tags: vec!["fade".to_string(), "basic".to_string(), "alpha".to_string()],
+        tags: vec!["fade".to_string(), "basic".to_string(), "color".to_string()],
     }
 }
 
@@ -89,9 +87,7 @@ fn basic_fade_out() -> Example {
         title: "Fade Out".to_string(),
         description: "Gradually fade text to transparent".to_string(),
         category: Category::Basic,
-        code: r#"fade_out(Duration::from_ms(2000))
-    .with_interpolation(SineIn)"#
-            .to_string(),
+        code: r#"fx::fade_to_fg(Color::Black, (2000, SineIn))"#.to_string(),
         canvas: r#"Goodbye, TachyonFX!
 
 This text will fade out gently
@@ -99,7 +95,7 @@ using a sine wave easing.
 
 Watch it disappear..."#
             .to_string(),
-        tags: vec!["fade".to_string(), "basic".to_string(), "alpha".to_string()],
+        tags: vec!["fade".to_string(), "basic".to_string(), "color".to_string()],
     }
 }
 
@@ -107,11 +103,9 @@ fn basic_slide_left() -> Example {
     Example {
         id: "basic_slide_left".to_string(),
         title: "Slide from Left".to_string(),
-        description: "Text slides in from the left side".to_string(),
+        description: "Text slides in from the left side with gradient".to_string(),
         category: Category::Basic,
-        code: r#"slide_in_left(Duration::from_ms(1000))
-    .with_interpolation(BackOut)"#
-            .to_string(),
+        code: r#"fx::slide_in(Motion::LeftToRight, 10, 0, Color::Black, (1000, BackOut))"#.to_string(),
         canvas: r#"▶ Sliding from the left!
 
 Watch this content move smoothly
@@ -121,7 +115,7 @@ The BackOut easing adds a nice bounce!"#
             .to_string(),
         tags: vec![
             "slide".to_string(),
-            "movement".to_string(),
+            "motion".to_string(),
             "basic".to_string(),
         ],
     }
@@ -131,11 +125,9 @@ fn basic_slide_right() -> Example {
     Example {
         id: "basic_slide_right".to_string(),
         title: "Slide from Right".to_string(),
-        description: "Text slides in from the right side".to_string(),
+        description: "Text slides in from the right side with elastic motion".to_string(),
         category: Category::Basic,
-        code: r#"slide_in_right(Duration::from_ms(1200))
-    .with_interpolation(ElasticOut)"#
-            .to_string(),
+        code: r#"fx::slide_in(Motion::RightToLeft, 15, 5, Color::Gray, (1200, ElasticOut))"#.to_string(),
         canvas: r#"                    ◀ Sliding from the right!
 
            Content can slide from any direction.
@@ -145,7 +137,7 @@ fn basic_slide_right() -> Example {
             .to_string(),
         tags: vec![
             "slide".to_string(),
-            "movement".to_string(),
+            "motion".to_string(),
             "elastic".to_string(),
         ],
     }
@@ -154,24 +146,22 @@ fn basic_slide_right() -> Example {
 fn basic_typewriter() -> Example {
     Example {
         id: "basic_typewriter".to_string(),
-        title: "Typewriter Effect".to_string(),
-        description: "Text appears character by character like typing".to_string(),
+        title: "Dissolve Effect".to_string(),
+        description: "Text dissolves away and reforms randomly".to_string(),
         category: Category::Basic,
-        code: r#"typewriter(Duration::from_ms(2500))
-    .with_interpolation(Linear)"#
-            .to_string(),
-        canvas: r#"This is a typewriter effect.
+        code: r#"fx::dissolve((2500, Linear))"#.to_string(),
+        canvas: r#"This text will dissolve away!
 
-Characters appear one by one,
-just like someone is typing them
-in real time.
+Characters disappear randomly,
+creating a dynamic effect that
+draws attention.
 
-Perfect for storytelling!"#
+Perfect for transitions!"#
             .to_string(),
         tags: vec![
-            "typewriter".to_string(),
+            "dissolve".to_string(),
             "text".to_string(),
-            "reveal".to_string(),
+            "random".to_string(),
         ],
     }
 }
@@ -180,25 +170,22 @@ Perfect for storytelling!"#
 fn fade_slide_combo() -> Example {
     Example {
         id: "fade_slide_combo".to_string(),
-        title: "Fade + Slide Combination".to_string(),
-        description: "Combines fading with sliding for smooth transitions".to_string(),
+        title: "Sweep + Color Transition".to_string(),
+        description: "Combines sweeping motion with color transitions".to_string(),
         category: Category::Transitions,
-        code: r#"fade_in(Duration::from_ms(800))
-    .and(slide_in_left(Duration::from_ms(1000)))
-    .with_interpolation(CubicOut)"#
-            .to_string(),
-        canvas: r#"◆ Smooth Combined Motion
+        code: r#"fx::sweep_in(Motion::LeftToRight, 20, 10, Color::Blue, (800, CubicOut))"#.to_string(),
+        canvas: r#"◆ Smooth Sweeping Motion
 
-This text both fades in AND slides,
+This text sweeps in with a color gradient,
 creating a sophisticated entrance effect.
 
-Multiple effects can work together
-to create richer animations!"#
+The sweep reveals content progressively
+with smooth color transitions!"#
             .to_string(),
         tags: vec![
-            "fade".to_string(),
-            "slide".to_string(),
-            "combination".to_string(),
+            "sweep".to_string(),
+            "motion".to_string(),
+            "color".to_string(),
         ],
     }
 }
@@ -206,25 +193,22 @@ to create richer animations!"#
 fn cross_fade_transition() -> Example {
     Example {
         id: "cross_fade_transition".to_string(),
-        title: "Cross Fade Transition".to_string(),
-        description: "One text fades out while another fades in".to_string(),
+        title: "HSL Color Shift".to_string(),
+        description: "Shifts hue, saturation, and lightness smoothly".to_string(),
         category: Category::Transitions,
-        code: r#"fade_out(Duration::from_ms(1000))
-    .then(
-        fade_in(Duration::from_ms(1000))
-    )"#
-        .to_string(),
-        canvas: r#"Scene 1: Initial Content
+        code: r#"fx::hsl_shift_fg([120.0, 25.0, -10.0], (1000, QuadInOut))"#.to_string(),
+        canvas: r#"🌈 Color Shifting Magic
 
-This will fade out and be replaced
-by new content in a smooth transition.
+This text changes hue, saturation,
+and lightness over time.
 
-Great for scene changes!"#
+Watch the colors transform smoothly
+using HSL color space!"#
             .to_string(),
         tags: vec![
-            "fade".to_string(),
-            "transition".to_string(),
-            "sequence".to_string(),
+            "hsl".to_string(),
+            "color".to_string(),
+            "shift".to_string(),
         ],
     }
 }
@@ -232,26 +216,22 @@ Great for scene changes!"#
 fn slide_sequence() -> Example {
     Example {
         id: "slide_sequence".to_string(),
-        title: "Sequential Slides".to_string(),
-        description: "Multiple slide effects in sequence".to_string(),
+        title: "Stretch Effect".to_string(),
+        description: "Stretches content using block characters".to_string(),
         category: Category::Transitions,
-        code: r#"slide_in_left(Duration::from_ms(500))
-    .then(slide_in_right(Duration::from_ms(500)))
-    .then(slide_in_up(Duration::from_ms(500)))
-    .with_interpolation(BounceOut)"#
-            .to_string(),
-        canvas: r#"▲ Multi-directional slides!
+        code: r#"fx::stretch(Motion::LeftToRight, Style::default().bg(Color::Cyan), (500, BounceOut))"#.to_string(),
+        canvas: r#"▲ Stretching Motion!
 
-First from left → then right →
-finally from bottom ↑
+Content stretches horizontally
+using block characters.
 
-Each direction creates a different
-visual rhythm and flow."#
+Creates a unique expanding effect
+that feels dynamic and engaging."#
             .to_string(),
         tags: vec![
-            "slide".to_string(),
-            "sequence".to_string(),
-            "multi-direction".to_string(),
+            "stretch".to_string(),
+            "motion".to_string(),
+            "blocks".to_string(),
         ],
     }
 }
@@ -260,27 +240,23 @@ visual rhythm and flow."#
 fn bouncing_text() -> Example {
     Example {
         id: "bouncing_text".to_string(),
-        title: "Bouncing Animation".to_string(),
-        description: "Text with a bouncy, playful animation".to_string(),
+        title: "Repeating Effect".to_string(),
+        description: "Effect that repeats multiple times".to_string(),
         category: Category::Animations,
-        code: r#"slide_in_up(Duration::from_ms(800))
-    .with_interpolation(BounceOut)
-    .repeat(3)
-    .with_delay(Duration::from_ms(200))"#
-            .to_string(),
-        canvas: r#"🎾 BOUNCE! BOUNCE! BOUNCE!
+        code: r#"fx::repeat(fx::dissolve(800), RepeatMode::Times(3))"#.to_string(),
+        canvas: r#"🎾 REPEAT! REPEAT! REPEAT!
 
-This text has serious spring in its step!
+This effect repeats 3 times!
 
-The BounceOut interpolation creates
-a physics-like bouncing effect.
+The dissolve effect runs repeatedly
+creating a mesmerizing animation.
 
-Try adjusting the repeat count!"#
+Perfect for emphasis!"#
             .to_string(),
         tags: vec![
-            "bounce".to_string(),
             "repeat".to_string(),
-            "physics".to_string(),
+            "dissolve".to_string(),
+            "loop".to_string(),
         ],
     }
 }
@@ -288,27 +264,24 @@ Try adjusting the repeat count!"#
 fn wave_effect() -> Example {
     Example {
         id: "wave_effect".to_string(),
-        title: "Wave Motion".to_string(),
-        description: "Text flows like a wave with sine interpolation".to_string(),
+        title: "Infinite Loop".to_string(),
+        description: "Effect that loops forever using repeating".to_string(),
         category: Category::Animations,
-        code: r#"slide_in_left(Duration::from_ms(2000))
-    .with_interpolation(SineInOut)
-    .repeat(Float::INFINITY)"#
-            .to_string(),
-        canvas: r#"🌊 Flowing like water...
+        code: r#"fx::repeating(fx::hsl_shift_fg([60.0, 0.0, 10.0], (2000, SineInOut)))"#.to_string(),
+        canvas: r#"🌊 Infinite Color Flow...
 
-∿∿∿ Wave motion creates organic movement ∿∿∿
+∿∿∿ Colors shift in endless waves ∿∿∿
 
-The sine wave interpolation feels natural,
-like breathing or ocean waves.
+The HSL shift creates smooth color changes
+that repeat forever.
 
-This pattern repeats infinitely!"#
+Hypnotic and beautiful!"#
             .to_string(),
         tags: vec![
-            "wave".to_string(),
-            "sine".to_string(),
+            "repeating".to_string(),
+            "hsl".to_string(),
             "infinite".to_string(),
-            "organic".to_string(),
+            "color".to_string(),
         ],
     }
 }
@@ -316,14 +289,10 @@ This pattern repeats infinitely!"#
 fn matrix_rain() -> Example {
     Example {
         id: "matrix_rain".to_string(),
-        title: "Matrix Rain Effect".to_string(),
-        description: "Classic falling text effect like The Matrix".to_string(),
+        title: "Symbol Evolution".to_string(),
+        description: "Characters evolve through symbol sets".to_string(),
         category: Category::Animations,
-        code: r#"slide_in_up(Duration::from_ms(3000))
-    .with_interpolation(Linear)
-    .repeat(Float::INFINITY)
-    .with_delay(Duration::from_ms(100))"#
-            .to_string(),
+        code: r#"fx::evolve(EvolveSymbolSet::Matrix, (3000, Linear))"#.to_string(),
         canvas: r#"01001000 01100101 01101100 01101100 01101111
 11000001 10110111 11010011 10001101 11100010
 01010100 01100001 01100011 01101000 01111001
@@ -331,14 +300,14 @@ fn matrix_rain() -> Example {
 01000110 01011000 00100000 01110010 01100001
 11001011 10110101 11000111 11101001 11001100
 
-Wake up, Neo... Follow the white rabbit.
-The Matrix has you..."#
+Characters transform through Matrix symbols
+Creating that classic digital rain effect!"#
             .to_string(),
         tags: vec![
+            "evolve".to_string(),
             "matrix".to_string(),
-            "binary".to_string(),
-            "rain".to_string(),
-            "linear".to_string(),
+            "symbols".to_string(),
+            "digital".to_string(),
         ],
     }
 }
@@ -346,26 +315,22 @@ The Matrix has you..."#
 fn rotating_text() -> Example {
     Example {
         id: "rotating_text".to_string(),
-        title: "Rotating Animation".to_string(),
-        description: "Text that rotates with custom timing".to_string(),
+        title: "Explode Effect".to_string(),
+        description: "Text explodes outward with physics".to_string(),
         category: Category::Animations,
-        code: r#"rotate(Duration::from_ms(2000))
-    .with_interpolation(QuartInOut)
-    .repeat(2)"#
-            .to_string(),
-        canvas: r#"⟲ ROTATION IN MOTION ⟳
+        code: r#"fx::explode(15.0, 2.0, (2000, QuartInOut))"#.to_string(),
+        canvas: r#"⟲ EXPLODING OUTWARD! ⟳
 
-This text spins around its center
-with a QuartInOut easing curve.
+Characters fly outward from center
+with realistic physics simulation.
 
-Watch how it starts slow,
-speeds up in the middle,
-then slows down again!"#
+Velocity and gravity parameters
+create believable motion!"#
             .to_string(),
         tags: vec![
-            "rotate".to_string(),
-            "spin".to_string(),
-            "custom-timing".to_string(),
+            "explode".to_string(),
+            "physics".to_string(),
+            "motion".to_string(),
         ],
     }
 }
@@ -374,31 +339,26 @@ then slows down again!"#
 fn parallel_effects() -> Example {
     Example {
         id: "parallel_effects".to_string(),
-        title: "Parallel Effect Chains".to_string(),
-        description: "Multiple effects running simultaneously".to_string(),
+        title: "Effect with Filters".to_string(),
+        description: "Using filters to target specific cells".to_string(),
         category: Category::Advanced,
-        code: r#"parallel([
-    fade_in(Duration::from_ms(1000)),
-    slide_in_left(Duration::from_ms(1200)),
-    scale_in(Duration::from_ms(800))
-])
-.with_interpolation(BackOut)"#
-            .to_string(),
-        canvas: r#"⚡ PARALLEL PROCESSING ⚡
+        code: r#"fx::fade_to_fg(Color::Red, (1000, BackOut))
+    .with_filter(CellFilter::Text)"#.to_string(),
+        canvas: r#"⚡ FILTERED EFFECTS ⚡
 
-This text experiences multiple effects
-happening at the same time:
+This effect only targets text characters,
+leaving other elements unchanged.
 
-• Fading in (alpha change)
-• Sliding from left (position change)
-• Scaling up (size change)
+🔥 Emojis and symbols ignored 🔥
+Only regular text gets colored!
 
-All synchronized but with different durations!"#
+Filters provide precise control
+over which cells are affected."#
             .to_string(),
         tags: vec![
-            "parallel".to_string(),
-            "multi-effect".to_string(),
-            "synchronization".to_string(),
+            "filter".to_string(),
+            "targeting".to_string(),
+            "precise".to_string(),
         ],
     }
 }
@@ -406,30 +366,26 @@ All synchronized but with different durations!"#
 fn conditional_timing() -> Example {
     Example {
         id: "conditional_timing".to_string(),
-        title: "Conditional Timing".to_string(),
-        description: "Effects that adapt based on conditions".to_string(),
+        title: "Delayed Effect".to_string(),
+        description: "Effect with delay before starting".to_string(),
         category: Category::Advanced,
-        code: r#"if_condition(content.len() > 100,
-    typewriter(Duration::from_ms(3000)),
-    fade_in(Duration::from_ms(1000))
-)
-.with_delay(Duration::from_ms(500))"#
-            .to_string(),
-        canvas: r#"📊 ADAPTIVE EFFECTS 📊
+        code: r#"fx::delay(500, fx::fade_to_fg(Color::Green, (1000, QuadOut)))"#.to_string(),
+        canvas: r#"📊 DELAYED EFFECT 📊
 
-This effect changes behavior based on
-the content length:
+This effect waits 500ms before starting
+the color transition.
 
-• Long content → Typewriter effect
-• Short content → Simple fade in
+Delays allow for:
+• Sequencing multiple effects
+• Creating pause between actions
+• Building anticipation
 
-The system can make decisions about
-which animation to use!"#
+Timing is everything in animation!"#
             .to_string(),
         tags: vec![
-            "conditional".to_string(),
-            "adaptive".to_string(),
-            "logic".to_string(),
+            "delay".to_string(),
+            "timing".to_string(),
+            "sequence".to_string(),
         ],
     }
 }
@@ -437,33 +393,27 @@ which animation to use!"#
 fn custom_interpolations() -> Example {
     Example {
         id: "custom_interpolations".to_string(),
-        title: "Custom Interpolation Curves".to_string(),
-        description: "Using advanced easing functions for unique motion".to_string(),
+        title: "Extended Duration".to_string(),
+        description: "Extending effect start and end times".to_string(),
         category: Category::Advanced,
-        code: r#"slide_in_left(Duration::from_ms(1500))
-    .with_interpolation(
-        bezier(0.68, -0.55, 0.265, 1.55)
-    )
-    .then(
-        bounce_in_place(Duration::from_ms(500))
-    )"#
-        .to_string(),
-        canvas: r#"🎨 CUSTOM CURVES 🎨
+        code: r#"fx::prolong_end(300, fx::dissolve((1500, BounceInOut)))"#.to_string(),
+        canvas: r#"🎨 EXTENDED DURATION 🎨
 
-This uses a custom Bézier curve
-for a unique motion feel:
+This effect prolongs the end by 300ms,
+making it stay visible longer.
 
-The curve creates anticipation
-(pulls back first)
-then overshoots the target
-before settling in place.
+Use prolong_start() and prolong_end()
+to extend effect timing:
 
-Fine-tune the motion to match your vision!"#
+• prolong_start() - delay before starting
+• prolong_end() - hold after completion
+
+Perfect for creating smooth transitions!"#
             .to_string(),
         tags: vec![
-            "bezier".to_string(),
-            "custom".to_string(),
-            "curves".to_string(),
+            "prolong".to_string(),
+            "duration".to_string(),
+            "timing".to_string(),
             "advanced".to_string(),
         ],
     }
@@ -473,18 +423,10 @@ Fine-tune the motion to match your vision!"#
 fn terminal_boot_sequence() -> Example {
     Example {
         id: "terminal_boot_sequence".to_string(),
-        title: "Terminal Boot Sequence".to_string(),
-        description: "Simulates a computer boot-up with multiple stages".to_string(),
+        title: "Coalesce Formation".to_string(),
+        description: "Text reforms from dissolution with style".to_string(),
         category: Category::Showcase,
-        code: r#"sequence([
-    typewriter(Duration::from_ms(1000)),
-    pause(Duration::from_ms(500)),
-    typewriter(Duration::from_ms(800)),
-    pause(Duration::from_ms(300)),
-    fade_in(Duration::from_ms(400))
-])
-.with_interpolation(Linear)"#
-            .to_string(),
+        code: r#"fx::coalesce_from(Style::default().fg(Color::Green).bg(Color::Black), (1000, BackOut))"#.to_string(),
         canvas: r#"[BOOT] Initializing TachyonFX System...
 [BOOT] Loading effect modules... OK
 [BOOT] Compiling DSL engine... OK
@@ -497,10 +439,10 @@ Welcome to TachyonFX Terminal.
 All systems operational."#
             .to_string(),
         tags: vec![
-            "boot".to_string(),
-            "sequence".to_string(),
+            "coalesce".to_string(),
+            "reform".to_string(),
+            "style".to_string(),
             "terminal".to_string(),
-            "typewriter".to_string(),
         ],
     }
 }
@@ -508,29 +450,26 @@ All systems operational."#
 fn glitch_effect() -> Example {
     Example {
         id: "glitch_effect".to_string(),
-        title: "Digital Glitch".to_string(),
-        description: "Cyberpunk-style glitch effect with distortion".to_string(),
+        title: "Never Complete".to_string(),
+        description: "Effect that runs indefinitely".to_string(),
         category: Category::Showcase,
-        code: r#"glitch(Duration::from_ms(2000))
-    .with_intensity(0.7)
-    .with_color_shift(true)
-    .repeat(3)
-    .with_delay(Duration::from_ms(800))"#
-            .to_string(),
+        code: r#"fx::never_complete(fx::hsl_shift_fg([0.0, 50.0, 0.0], (2000, SineInOut)))"#.to_string(),
         canvas: r#"G̴̰̈L̵̄I̶̓T̷̽C̸̈́H̴̾ ̵̎E̶̽F̷̈F̴̽E̵̐C̸̾T̷̏
 
-Ḑ̷i̸g̶i̷t̴a̸l̵ ̶c̷o̶r̸r̶u̸p̵t̸i̷o̶n̴ ̸i̶n̵ ̶p̸r̶o̸g̷r̶e̶s̸s̷.̴.̷.̶
+Digital corruption in progress...
 
-T̷h̴e̸ ̶m̵a̸t̷r̶i̵x̴ ̸i̶s̷ ̵b̶r̸e̷a̶k̸i̵n̷g̶ ̴d̵o̶w̸n̴
-S̸y̴s̵t̶e̸m̶ ̷i̴n̸s̵t̶a̵b̸i̷l̸i̶t̵y̴ ̶d̸e̷t̸e̸c̴t̸e̷d̵
-R̷e̸a̶l̸i̷t̸y̴.̵e̶x̸e̵ ̶h̸a̴s̶ ̷s̸t̴o̶p̸p̸e̵d̴ ̷w̸o̶r̶k̸i̸n̶g̵
+This effect never completes
+Running infinitely with never_complete()
+
+System instability detected
+Reality.exe has stopped working
 
 ERROR: REALITY_BUFFER_OVERFLOW"#
             .to_string(),
         tags: vec![
-            "glitch".to_string(),
-            "cyberpunk".to_string(),
-            "corruption".to_string(),
+            "never_complete".to_string(),
+            "infinite".to_string(),
+            "hsl".to_string(),
             "digital".to_string(),
         ],
     }
@@ -539,47 +478,30 @@ ERROR: REALITY_BUFFER_OVERFLOW"#
 fn demo_presentation() -> Example {
     Example {
         id: "demo_presentation".to_string(),
-        title: "Feature Showcase".to_string(),
-        description: "Comprehensive demo showing multiple TachyonFX capabilities".to_string(),
+        title: "Expand Bidirectional".to_string(),
+        description: "Expansive effect growing in multiple directions".to_string(),
         category: Category::Showcase,
-        code: r#"sequence([
-    fade_in(Duration::from_ms(1000)),
-    pause(Duration::from_ms(800)),
-    slide_in_left(Duration::from_ms(1200))
-        .with_interpolation(BackOut),
-    pause(Duration::from_ms(600)),
-    typewriter(Duration::from_ms(2000)),
-    pause(Duration::from_ms(400)),
-    parallel([
-        rotate(Duration::from_ms(1000)),
-        scale_pulse(Duration::from_ms(1000))
-    ]),
-    fade_out(Duration::from_ms(800))
-])"#
-        .to_string(),
+        code: r#"fx::expand(ExpandDirection::Horizontal, Style::default().bg(Color::Magenta), (1500, ExpoOut))"#.to_string(),
         canvas: r#"🎭 TACHYONFX SHOWCASE 🎭
 
 ╔══════════════════════════════════════╗
 ║        FEATURE DEMONSTRATION         ║
 ╚══════════════════════════════════════╝
 
-This example combines multiple effects:
+This example shows expansion effect:
 
-1. Fade In    → Gentle introduction
-2. Slide      → Dynamic movement
-3. Typewriter → Character-by-character reveal
-4. Rotation   → Spinning transformation
-5. Scaling    → Size pulsing
-6. Fade Out   → Elegant exit
+Expands horizontally from center
+Using a magenta background style
+With exponential easing for drama
 
-Each effect can be combined, sequenced,
-and customized to create rich animations!"#
+Creates a powerful reveal effect
+Perfect for highlighting content!"#
             .to_string(),
         tags: vec![
-            "showcase".to_string(),
-            "demo".to_string(),
-            "comprehensive".to_string(),
-            "multi-effect".to_string(),
+            "expand".to_string(),
+            "bidirectional".to_string(),
+            "background".to_string(),
+            "reveal".to_string(),
         ],
     }
 }

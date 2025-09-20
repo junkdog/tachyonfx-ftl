@@ -18,22 +18,43 @@ html, body {
     min-height: 0;
 }
 
-#editor {
-    width: 50%;
+/* Examples Panel - Left sidebar */
+#examples-panel {
+    width: 300px;
+    min-width: 200px;
+    max-width: 500px;
     height: 100%;
-    position: relative;
+    background-color: #282828;
+    border-right: 1px solid #3c3836;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease, margin-left 0.3s ease;
 }
 
-#divider {
-    width: 5px;
-    cursor: col-resize;
-    background-color: #333;
+#examples-panel.collapsed {
+    width: 40px;
+    min-width: 40px;
+    margin-left: 0;
+    overflow: hidden;
 }
-#content {
-    width: 50%;
+
+#examples-panel.collapsed .examples-content {
+    display: none;
+}
+
+/* Editor Section - Middle area */
+#editor-section {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 45%;
+    min-width: 300px;
     height: 100%;
-    padding: 1em;
-    overflow: auto;
+}
+
+#editor {
+    flex: 1;
+    position: relative;
+    min-height: 300px;
 }
 
 #canvas-input {
@@ -48,7 +69,66 @@ html, body {
     box-sizing: border-box;
     border-top: 1px solid #333;
     height: 100px;
+    min-height: 50px;
+    max-height: 300px;
 }
+
+/* Custom scrollbar styling for canvas input */
+#canvas-input::-webkit-scrollbar {
+    width: 6px;
+}
+
+#canvas-input::-webkit-scrollbar-track {
+    background: #1d2021;
+    border-radius: 3px;
+}
+
+#canvas-input::-webkit-scrollbar-thumb {
+    background: #504945;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+#canvas-input::-webkit-scrollbar-thumb:hover {
+    background: #665c54;
+}
+
+/* Divider */
+#divider {
+    width: 12px;
+    cursor: col-resize;
+    background-color: #3c3836;
+    border-left: 1px solid #504945;
+    border-right: 1px solid #504945;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+#divider:hover {
+    background-color: #504945;
+}
+
+#divider::before {
+    content: "⋮⋮";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #665c54;
+    font-size: 12px;
+    line-height: 8px;
+    pointer-events: none;
+}
+
+/* Content Panel - Right side */
+#content {
+    flex: 0 0 55%;
+    min-width: 300px;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
 
 pre {
     font-size: 16px;
