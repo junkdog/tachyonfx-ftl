@@ -181,8 +181,8 @@ mod basic {
             description: "Color cycling effect",
             category: Category::Basic,
             code: indoc! {"
-                let fg_shift = [1440.0, 0.0, 20.0];
-                let timer = (2000, Interpolation::SineIn);
+                let fg_shift = [1300.0, 0.0, 20.0];
+                let timer = 2000;
 
                 let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
                     .with_pattern(SweepPattern::left_to_right(160));
