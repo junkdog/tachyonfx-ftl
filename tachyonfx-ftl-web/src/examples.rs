@@ -200,9 +200,7 @@ mod basic {
             description: "Changes foreground HSL values",
             category: Category::Basic,
             code: indoc! {"
-                let timer = (1000, Interpolation::Linear);
-                let fg_shift = [120.0, 25.0, 25.0];
-                fx::hsl_shift(Some(fg_shift), None, timer)
+                fx::hsl_shift_fg([120.0, 25.0, 25.0], 1000)
             "},
             canvas: canvas::DEFAULT,
         }
