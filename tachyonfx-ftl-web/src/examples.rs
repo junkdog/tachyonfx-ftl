@@ -353,7 +353,7 @@ mod basic {
         Example {
             id: "evolve",
             title: "Evolve",
-            description: "Transforms characters through symbol sets",
+            description: "Versatile effect type using characters transformations through symbol sets",
             category: Category::Transitions,
             code: indoc! {"
                 let content_area = Rect::new(12, 7, 80, 17);
@@ -673,7 +673,7 @@ mod showcase {
                 let screen_bg = Color::from_u32(0x1d2021);
 
                 // patterns control effect progression
-                let sweep = SweepPattern::left_to_right(20);
+                let sweep = SweepPattern::left_to_right(40);
                 let radial = RadialPattern::center().with_transition_width(20.0);
 
                 let timer = 1600;
@@ -685,7 +685,9 @@ mod showcase {
 
                 // exploded cells retain their color data; we can remove
                 // "explosion artifacts" by fading them into the screen bg.
-                let fade_to_screen_bg = fx::fade_to(screen_bg, screen_bg, fade_timer.clone())
+                // we use a different interpolation to delay the fade progression,
+                // avoiding prematurely hiding exploding cells.
+                let fade_to_screen_bg = fx::fade_to(screen_bg, screen_bg, (fade_timer, QuadIn))
                     .with_area(content_area)
                     .with_color_space(ColorSpace::Rgb) // faster than HSL
                     .with_pattern(sweep);              // effect progression pattern
@@ -718,7 +720,6 @@ mod showcase {
                     fx::delay(fade_timer, implode), // implode the content back in
                     black_to_screen_bg,             // runs continously
                 ])
-
             "#},
             canvas: canvas::DEFAULT,
         }
