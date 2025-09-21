@@ -42,23 +42,20 @@ pub fn get_examples() -> Vec<Example> {
         basic::fade_from(),
         basic::hsl_shift(),
         basic::hsl_shift_fg(),
-
-        // TEXT/CHARACTER EFFECTS
-        text::coalesce(),
-        text::coalesce_from(),
-        text::dissolve(),
-        text::dissolve_to(),
-        text::evolve(),
-        text::evolve_into(),
-        text::evolve_from(),
-        text::sweep_in(),
-        text::sweep_out(),
-        text::slide_in(),
-        text::slide_out(),
-        text::stretch(),
-        text::expand(),
-        text::explode(),
-
+        basic::coalesce(),
+        basic::coalesce_from(),
+        basic::dissolve(),
+        basic::dissolve_to(),
+        basic::evolve(),
+        basic::evolve_into(),
+        basic::evolve_from(),
+        basic::sweep_in(),
+        basic::sweep_out(),
+        basic::slide_in(),
+        basic::slide_out(),
+        basic::stretch(),
+        basic::expand(),
+        basic::explode(),
         // TIMING AND CONTROL
         timing::delay(),
         timing::ping_pong(),
@@ -71,28 +68,27 @@ pub fn get_examples() -> Vec<Example> {
         timing::remap_alpha(),
         timing::with_duration(),
         timing::timed_never_complete(),
-
         // COMBINATION EFFECTS
         combination::parallel(),
         combination::sequence(),
-
         // GEOMETRY EFFECTS
         geometry::translate(),
         geometry::translate_buf(),
         geometry::resize_area(),
-
+        // SHOWCASE EFFECTS
+        showcase::explode_patterned(),
         // CUSTOM EFFECTS
-        custom::effect_fn(),
-        custom::effect_fn_buf(),
-        custom::offscreen_buffer(),
-        custom::dynamic_area(),
+        // custom::effect_fn(),
+        // custom::effect_fn_buf(),
+        // custom::offscreen_buffer(),
+        // custom::dynamic_area(),
     ]
 }
 
 // basic examples
 mod basic {
-    use indoc::indoc;
     use super::*;
+    use indoc::indoc;
 
     pub fn fade_from_fg() -> Example {
         Example {
@@ -194,12 +190,6 @@ mod basic {
             canvas: canvas::DEFAULT,
         }
     }
-}
-
-// text/character effects
-mod text {
-    use indoc::indoc;
-    use super::*;
 
     pub fn coalesce() -> Example {
         Example {
@@ -316,11 +306,10 @@ mod text {
             description: "Explodes content outward",
             category: Category::Transitions,
             code: indoc! {"
-                let timer = (1000, Linear);
-                fx::parallel(&[
-                    fx::fade_to_fg(Color::from_u32(0x404040), timer),
-                    fx::explode(15.0, 2.0, timer),
-                ])
+                let content_area = Rect::new(12, 7, 80, 17);
+
+                fx::explode(10.0, 3.0, 800)
+                    .with_area(content_area)
             "},
             canvas: canvas::DEFAULT,
         }
@@ -443,8 +432,8 @@ mod text {
 
 // timing and control effects
 mod timing {
-    use indoc::indoc;
     use super::*;
+    use indoc::indoc;
 
     pub fn delay() -> Example {
         Example {
@@ -526,8 +515,11 @@ mod timing {
             description: "Repeats effect by count",
             category: Category::Advanced,
             code: indoc! {"
-                // Repeat a fade effect 3 times
-                let fade = fx::fade_to_fg(Color::Red, EffectTimer::from_ms(1000, Interpolation::Linear));
+                let fade = fx::fade_to_fg(
+                    Color::Red,
+                    EffectTimer::from_ms(1000, Interpolation::CubicOut)
+                );
+
                 fx::repeat(fade, RepeatMode::Times(3))
             "},
             canvas: canvas::DEFAULT,
@@ -541,9 +533,13 @@ mod timing {
             description: "Repeats effect indefinitely",
             category: Category::Advanced,
             code: indoc! {"
-                // Create an endless color cycling effect
-                let fade = fx::fade_to_fg(Color::Red, EffectTimer::from_ms(1000, Interpolation::Linear));
-                fx::repeating(fade)
+                let fg_shift = [-330.0, 20.0, 20.0];
+                let timer = (1000, Interpolation::SineIn);
+
+                let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
+                    .with_pattern(RadialPattern::with_transition((0.5, 0.5), 4.0));
+
+                fx::repeating(fx::ping_pong(radial_hsl_xform))
             "},
             canvas: canvas::DEFAULT,
         }
@@ -570,8 +566,11 @@ mod timing {
             description: "Remaps effect's alpha progression",
             category: Category::Advanced,
             code: indoc! {"
+                // a normal fade-text-to-red effect
                 let fade_effect = fx::fade_to_fg(Color::Red, 1000);
-                fx::remap_alpha(0.2, 0.8, fade_effect)
+
+                // rescales progression from 0.0-1.0  to 0.5-0.7
+                fx::remap_alpha(0.5, 0.7, fade_effect)
             "},
             canvas: canvas::DEFAULT,
         }
@@ -584,8 +583,10 @@ mod timing {
             description: "Applies duration limit to effect",
             category: Category::Advanced,
             code: indoc! {"
-                let effect = fx::fade_to_fg(Color::Red, 2000);
-                fx::with_duration(Duration::from_secs(1), effect)
+                fx::with_duration(
+                    500, // 500ms; cuts off at 25% progression
+                    fx::fade_to_fg(Color::Red, 2000) // 2s timer
+                )
             "},
             canvas: canvas::DEFAULT,
         }
@@ -598,8 +599,9 @@ mod timing {
             description: "Makes effect run indefinitely with time limit",
             category: Category::Advanced,
             code: indoc! {"
-                let effect = fx::fade_to_fg(Color::Red, 1000);
-                fx::timed_never_complete(Duration::from_secs(5), effect)
+                // fade at 100% progression for an additional 2s (3000-1000)
+                let effect = fx::fade_to_fg(Color::LightRed, 1000);
+                fx::timed_never_complete(3000, effect)
             "},
             canvas: canvas::DEFAULT,
         }
@@ -608,15 +610,15 @@ mod timing {
 
 // combination effects
 mod combination {
-    use indoc::indoc;
     use super::*;
+    use indoc::indoc;
 
     pub fn parallel() -> Example {
         Example {
             id: "parallel",
             title: "Parallel",
             description: "Runs effects simultaneously",
-            category: Category::Showcase,
+            category: Category::Advanced,
             code: indoc! {"
                 let c = Color::from_u32(0x504945);
                 let timer = (1000, Interpolation::CircOut);
@@ -634,7 +636,7 @@ mod combination {
             id: "sequence",
             title: "Sequence",
             description: "Runs effects sequentially",
-            category: Category::Showcase,
+            category: Category::Advanced,
             code: indoc! {"
                 let c = Color::from_u32(0x504945);
                 let timer = (500, Interpolation::CircOut);
@@ -648,89 +650,68 @@ mod combination {
     }
 }
 
-// custom effects
-mod custom {
+mod showcase {
+    use crate::examples::{canvas, Category, Example};
     use indoc::indoc;
-    use super::*;
 
-    pub fn effect_fn() -> Example {
+    pub fn explode_patterned() -> Example {
         Example {
-            id: "effect_fn",
-            title: "Custom Effect Function",
-            description: "Custom effects with cell iterator",
-            category: Category::Advanced,
-            code: indoc! {"
-                fx::effect_fn(Instant::now(), 1000, |state, _ctx, cell_iter| {
-                    let cycle: f32 = (state.elapsed().as_millis() % 3600) as f32;
-                    cell_iter
-                        .filter(|(_, cell)| cell.symbol() != \" \")
-                        .enumerate()
-                        .for_each(|(i, (_pos, cell))| {
-                            let hue = (2.0 * i as f32 + cycle * 0.2) % 360.0;
-                            let color = color_from_hsl(hue, 100.0, 50.0);
-                            cell.set_fg(color);
-                    });
-                })
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
+            id: "explode_patterned",
+            title: "Explode 2",
+            description: "Explode content with patterns",
+            category: Category::Showcase,
+            code: indoc! {r#"
+                let content_area = Rect::new(12, 7, 80, 17);
+                let screen_bg = Color::from_u32(0x1d2021);
 
-    pub fn effect_fn_buf() -> Example {
-        Example {
-            id: "effect_fn_buf",
-            title: "Custom Effect Buffer",
-            description: "Custom effects with buffer",
-            category: Category::Advanced,
-            code: indoc! {"
-                let timer = EffectTimer::from_ms(1000, Interpolation::Linear);
-                let no_state = ();
+                // patterns control effect progression
+                let sweep = SweepPattern::left_to_right(20);
+                let radial = RadialPattern::center().with_transition_width(20.0);
 
-                fx::effect_fn_buf(no_state, timer, |_state, context, buf| {
-                    let offset = context.timer.remaining().as_millis() as usize;
+                let timer = 1600;
+                let fade_timer = 800;
+                let explode_timer = 700;
 
-                    let filter = context.filter();
-                    let cell_pred = filter.map(FilterProcessor::validator);
+                // effects; nice-looking effects are typically achieved through
+                // careful timing and orechestration of constituent effects
 
-                    for (i, pos) in buf.area.positions().enumerate() {
-                        let cell = &mut buf[pos];
-                        if cell_pred.as_ref().is_some_and(|p| p.is_valid(pos, &cell)) {
-                            cell.set_fg(Color::Indexed(((offset + i) % 256) as u8));
-                        }
-                    }
-                }).filter(CellFilter::Text)
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
+                // exploded cells retain their color data; we can remove
+                // "explosion artifacts" by fading them into the screen bg.
+                let fade_to_screen_bg = fx::fade_to(screen_bg, screen_bg, fade_timer.clone())
+                    .with_area(content_area)
+                    .with_color_space(ColorSpace::Rgb) // faster than HSL
+                    .with_pattern(sweep);              // effect progression pattern
 
-    pub fn offscreen_buffer() -> Example {
-        Example {
-            id: "offscreen_buffer",
-            title: "Offscreen Buffer",
-            description: "Renders to separate buffer",
-            category: Category::Advanced,
-            code: indoc! {"
-                let area = Rect::new(0, 0, 80, 24);
-                let offscreen_buffer = ref_count(Buffer::empty(area));
-                let fade_effect = fx::fade_to_fg(Color::Red, EffectTimer::from_ms(1000, Interpolation::Linear));
-                fx::offscreen_buffer(fade_effect, offscreen_buffer.clone())
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
+                // explodes content left-to-right
+                let sweeping_explode = fx::explode(15.0, 3.0, explode_timer)
+                    .with_area(content_area)
+                    .with_pattern(sweep);  // same effect pattern as fade
 
-    pub fn dynamic_area() -> Example {
-        Example {
-            id: "dynamic_area",
-            title: "Dynamic Area",
-            description: "Wraps effects for responsive layouts",
-            category: Category::Advanced,
-            code: indoc! {"
-                let area_ref = RefRect::new(Rect::new(0, 0, 20, 5));
-                let fade_effect = fx::fade_to_fg(Color::Red, EffectTimer::from_ms(1000, Interpolation::Linear));
-                fx::dynamic_area(area_ref.clone(), fade_effect)
-            "},
+                // original positions of exploded cells are Color::Black;
+                // let's color it to the screen bg
+                let fill_exploded_cells = fx::fade_to(screen_bg, screen_bg, 1) // 1ms timer
+                    .with_filter(CellFilter::BgColor(Color::Black))
+                    .with_area(content_area);
+
+                // forcing `fill_exploded_cells` to run at progression 100% (fully
+                // transformed colors) for the full effect duration
+                let black_to_screen_bg = fx::prolong_end(timer, fill_exploded_cells);
+
+                // reverse-explode the content back in
+                let implode = fx::explode(10.0, 3.0, explode_timer)
+                    .with_area(content_area)
+                    .with_pattern(radial)
+                    .reversed();
+
+
+                fx::parallel(&[
+                    fade_to_screen_bg, // fade exploded cell (before exploding/moving them)
+                    sweeping_explode,               // explosion goes left-to-right
+                    fx::delay(fade_timer, implode), // implode the content back in
+                    black_to_screen_bg,             // runs continously
+                ])
+
+            "#},
             canvas: canvas::DEFAULT,
         }
     }
@@ -738,8 +719,8 @@ mod custom {
 
 // geometry effects
 mod geometry {
-    use indoc::indoc;
     use super::*;
+    use indoc::indoc;
 
     pub fn translate() -> Example {
         Example {
@@ -791,10 +772,6 @@ mod geometry {
         }
     }
 }
-
-
-
-
 
 mod canvas {
     pub const DEFAULT: &'static str = include_str!("../assets/default_canvas.ansi");

@@ -37,9 +37,7 @@ impl MultiBackend {
                     .enable_mouse_selection()
                     .grid_id(grid_id);
 
-                let backend =
-                    WebGl2Backend::new_with_options(options)
-                        .map_err(|e| eyre!("{e}"))?;
+                let backend = WebGl2Backend::new_with_options(options).map_err(|e| eyre!("{e}"))?;
                 let terminal = RatTerminal::new(backend)?;
                 Ok(MultiBackend::WebGl2(terminal))
             }
