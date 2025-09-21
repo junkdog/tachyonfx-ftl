@@ -8,7 +8,6 @@ pub struct Example {
     pub category: Category,
     pub code: &'static str,
     pub canvas: &'static str,
-    pub tags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -54,7 +53,6 @@ mod basic {
             category: Category::Basic,
             code: r#"fx::fade_from_fg(Color::Black, (1500, QuadOut))"#,
             canvas: canvas::DEFAULT,
-            tags: vec!["fade".to_string(), "basic".to_string(), "color".to_string()],
         }
     }
 }

@@ -326,10 +326,9 @@
 }
 
 .example-item:hover {
-    background-color: #32302f;
-    border-color: #3c3836;
-    border-left-color: #665c54;
-    transform: translateX(2px);
+    background-color: #3c3836;
+    border-color: #504945;
+    border-left-color: #a89984;
 }
 
 .example-item.active {
@@ -352,20 +351,6 @@
     margin-bottom: 6px;
 }
 
-.example-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-}
-
-.tag {
-    background-color: #504945;
-    color: #d5c4a1;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 2px;
-    border: 1px solid #665c54;
-}
 
 /* Responsive Design */
 @media (max-width: 1200px) {

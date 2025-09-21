@@ -102,9 +102,6 @@ class ExamplePanel {
             <div class="example-item ${isActive}" data-example-id="${example.id}">
                 <div class="example-title">${example.title}</div>
                 <div class="example-description">${example.description}</div>
-                <div class="example-tags">
-                    ${example.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                </div>
             </div>
         `;
     }
@@ -169,8 +166,7 @@ class ExamplePanel {
             // Search filter
             const searchMatch = this.searchTerm === '' ||
                                 example.title.toLowerCase().includes(this.searchTerm) ||
-                                example.description.toLowerCase().includes(this.searchTerm) ||
-                                example.tags.some(tag => tag.toLowerCase().includes(this.searchTerm));
+                                example.description.toLowerCase().includes(this.searchTerm);
 
             return categoryMatch && searchMatch;
         });
@@ -292,8 +288,7 @@ class ExamplePanel {
             id: ex.id,
             title: ex.title,
             category: ex.category,
-            description: ex.description,
-            tags: ex.tags
+            description: ex.description
         }));
     }
 }

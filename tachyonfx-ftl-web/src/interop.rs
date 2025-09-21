@@ -31,7 +31,7 @@ pub fn notify_error(error_message: &str) {
 pub fn get_example_list() -> String {
     let examples = get_examples();
 
-    // Return minimal data for UI (just id, title, category, description, tags)
+    // Return minimal data for UI (just id, title, category, description)
     let ui_data: Vec<_> = examples
         .iter()
         .map(|ex| {
@@ -39,8 +39,7 @@ pub fn get_example_list() -> String {
                 "id": ex.id,
                 "title": ex.title,
                 "description": ex.description,
-                "category": ex.category,
-                "tags": ex.tags
+                "category": ex.category
             })
         })
         .collect();
