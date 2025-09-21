@@ -19,6 +19,7 @@ serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 flate2 = "1.0"
 base64 = "0.22"
+indoc = "2.0.6"
 
 [[bin]]
 name = "tachyonfx-ftl-web"
