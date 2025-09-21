@@ -3,3 +3,6 @@ target = "index.html"          # The index HTML file to drive the bundling proce
 html_output = "index.html"     # The name of the output HTML file.
 public_url = "/tachyonfx-ftl"  # The public URL from which assets are to be served.
 minify = "on_release"          # Control minification: can be one of: never, on_release, always
+
+[tools]
+wasm_bindgen = "0.2.103"       # Use wasm-bindgen 0.2.103 to match project dependencies
