@@ -220,6 +220,9 @@ class ExamplePanel {
                     window.wasmBindings.compile_dsl(code);
                 }
 
+                // Remove example parameter so page reloads don't override user changes
+                updateQueryParam('example', null);
+
                 console.log(`Loaded example: ${result.title}`);
             } else {
                 console.error('Editor or canvas input not found');
