@@ -170,7 +170,9 @@ mod basic {
                 let timer = (1000, Interpolation::Linear);
                 let fg_shift = [120.0, 25.0, 25.0];
                 let bg_shift = [-40.0, -50.0, -50.0];
+
                 fx::hsl_shift(Some(fg_shift), Some(bg_shift), timer)
+                    .with_pattern(SweepPattern::left_to_right(80))
             "},
             canvas: canvas::DEFAULT,
         }
@@ -339,7 +341,9 @@ mod basic {
             code: indoc! {"
                 let c = Color::from_u32(0x1d2021);
                 let style = Style::default().bg(c);
-                fx::dissolve_to(style, (1000, Interpolation::CircOut))
+
+                fx::dissolve_to(style, 1000)
+                    .with_pattern(SweepPattern::left_to_right(35))
             "},
             canvas: canvas::DEFAULT,
         }
@@ -353,13 +357,14 @@ mod basic {
             category: Category::Transitions,
             code: indoc! {"
                 let content_area = Rect::new(12, 7, 80, 17);
-                let timer = (600, CircIn);
+                let timer = (450, Interpolation::QuartIn);
                 let style = Style::default()
-                    .bg(Color::from_u32(0x32302F))  // content area bg
-                    .fg(Color::from_u32(0x1D2021)); // screen area bg
+                    .fg(Color::from_u32(0x32302F))  // content area bg
+                    .bg(Color::from_u32(0x1D2021)); // screen area bg
 
-                fx::evolve_from((EvolveSymbolSet::Quadrants, style), timer)
-                    .with_pattern(DissolvePattern::new())
+                // a starting point for emulating a CRT screen turning on
+                fx::evolve((EvolveSymbolSet::Shaded, style), timer)
+                    .with_pattern(RadialPattern::with_transition((0.5, 0.5), 10.0))
                     .with_area(content_area)
             "},
             canvas: canvas::DEFAULT,
@@ -397,11 +402,14 @@ mod basic {
             category: Category::Transitions,
             code: indoc! {"
                 let content_area = Rect::new(12, 7, 80, 17);
+                let timer = (600, CircIn);
+                let style = Style::default()
+                    .bg(Color::from_u32(0x32302F))  // content area bg
+                    .fg(Color::from_u32(0x1D2021)); // screen area bg
 
-                fx::evolve_from(
-                    (EvolveSymbolSet::BlocksHorizontal, Style::default().fg(Color::Green)),
-                    EffectTimer::from_ms(1500, Interpolation::QuadOut)
-                ).with_pattern(CheckerboardPattern::default())
+                fx::evolve_from((EvolveSymbolSet::Quadrants, style), timer)
+                    .with_pattern(DissolvePattern::new())
+                    .with_area(content_area)
             "},
             canvas: canvas::DEFAULT,
         }
@@ -456,8 +464,7 @@ mod timing {
             description: "Plays effect forward then backward",
             category: Category::Advanced,
             code: indoc! {"
-                let timer = (500, Interpolation::CircOut);
-                fx::ping_pong(fx::coalesce(timer))
+                fx::ping_pong(fx::coalesce((1500, QuintIn)))
             "},
             canvas: canvas::DEFAULT,
         }
@@ -622,6 +629,7 @@ mod combination {
             code: indoc! {"
                 let c = Color::from_u32(0x504945);
                 let timer = (1000, Interpolation::CircOut);
+
                 fx::parallel(&[
                     fx::fade_from_fg(c, timer),
                     fx::coalesce(timer),
@@ -657,8 +665,8 @@ mod showcase {
     pub fn explode_patterned() -> Example {
         Example {
             id: "explode_patterned",
-            title: "Explode 2",
-            description: "Explode content with patterns",
+            title: "Explode, Patterned",
+            description: "Advanced explosion effect with patterns",
             category: Category::Showcase,
             code: indoc! {r#"
                 let content_area = Rect::new(12, 7, 80, 17);
