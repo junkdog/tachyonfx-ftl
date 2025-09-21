@@ -33,8 +33,12 @@ impl MultiBackend {
     pub fn new(grid_id: &str) -> Result<Self> {
         match get_backend_type() {
             BackendType::WebGl2 => {
+                let options = WebGl2BackendOptions::new()
+                    .enable_mouse_selection()
+                    .grid_id(grid_id);
+
                 let backend =
-                    WebGl2Backend::new_with_options(WebGl2BackendOptions::new().grid_id(grid_id))
+                    WebGl2Backend::new_with_options(options)
                         .map_err(|e| eyre!("{e}"))?;
                 let terminal = RatTerminal::new(backend)?;
                 Ok(MultiBackend::WebGl2(terminal))
