@@ -14,12 +14,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-    
+
+    - name: Cache Rust toolchain and cargo
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
     - name: Add WebAssembly target
       run: rustup target add wasm32-unknown-unknown
-    
+
     - name: Install trunk
-      run: cargo install --locked trunk
+      run: |
+        if ! command -v trunk &> /dev/null; then
+          cargo install --locked trunk
+        fi
     
     - name: Build
       run: cargo build 
@@ -31,15 +46,30 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: build
-    
+
     steps:
     - uses: actions/checkout@v5
-    
+
+    - name: Cache Rust toolchain and cargo
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
     - name: Add WebAssembly target
       run: rustup target add wasm32-unknown-unknown
-    
+
     - name: Install trunk
-      run: cargo install --locked trunk
+      run: |
+        if ! command -v trunk &> /dev/null; then
+          cargo install --locked trunk
+        fi
     
     - name: Build web application
       working-directory: tachyonfx-ftl-web
