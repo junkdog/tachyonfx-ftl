@@ -100,8 +100,13 @@ class ExamplePanel {
         const isActive = this.currentExample === example.id ? 'active' : '';
         return `
             <div class="example-item ${isActive}" data-example-id="${example.id}">
-                <div class="example-title">${example.title}</div>
-                <div class="example-description">${example.description}</div>
+                <div class="example-content">
+                    <div class="example-title">${example.title}</div>
+                    <div class="example-description">${example.description}</div>
+                </div>
+                <button class="copy-link-btn" data-example-id="${example.id}" title="Copy link to this example">
+                    📋
+                </button>
             </div>
         `;
     }
@@ -122,6 +127,16 @@ class ExamplePanel {
         const examplesList = document.getElementById('examples-list');
         if (examplesList) {
             examplesList.addEventListener('click', (e) => {
+                // Handle copy link button clicks
+                if (e.target.closest('.copy-link-btn')) {
+                    e.stopPropagation();
+                    const copyBtn = e.target.closest('.copy-link-btn');
+                    const exampleId = copyBtn.dataset.exampleId;
+                    this.copyExampleLink(exampleId);
+                    return;
+                }
+
+                // Handle example item clicks
                 const exampleItem = e.target.closest('.example-item');
                 if (exampleItem) {
                     const exampleId = exampleItem.dataset.exampleId;
@@ -220,8 +235,7 @@ class ExamplePanel {
                     window.wasmBindings.compile_dsl(code);
                 }
 
-                // Remove example parameter so page reloads don't override user changes
-                updateQueryParam('example', null);
+                // Keep example parameter in URL for shareable links
 
                 console.log(`Loaded example: ${result.title}`);
             } else {
@@ -293,6 +307,45 @@ class ExamplePanel {
             category: ex.category,
             description: ex.description
         }));
+    }
+
+    // Copy direct link to example
+    async copyExampleLink(exampleId) {
+        try {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const exampleUrl = `${baseUrl}?example=${exampleId}`;
+
+            await navigator.clipboard.writeText(exampleUrl);
+
+            // Show success feedback
+            if (window.showError) {
+                window.showError(`Link copied: ${exampleUrl}`);
+            } else {
+                console.log(`Link copied: ${exampleUrl}`);
+            }
+        } catch (error) {
+            console.error('Failed to copy link:', error);
+            // Fallback for browsers that don't support clipboard API
+            const textArea = document.createElement('textarea');
+            const baseUrl = window.location.origin + window.location.pathname;
+            const exampleUrl = `${baseUrl}?example=${exampleId}`;
+            textArea.value = exampleUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                if (window.showError) {
+                    window.showError(`Link copied: ${exampleUrl}`);
+                }
+            } catch (fallbackError) {
+                if (window.showError) {
+                    window.showError('Failed to copy link to clipboard');
+                }
+            }
+
+            document.body.removeChild(textArea);
+        }
     }
 }
 
