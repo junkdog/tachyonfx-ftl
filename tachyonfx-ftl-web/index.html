@@ -253,7 +253,7 @@
         runButton.addEventListener("click", () => {
             clearErrorMarkers();
             errorToast.classList.remove("show");
-            
+
             const dslCode = editor.getValue(0);
             const compressed_code = deflateAndEncode(dslCode);
             updateQueryParam("code", compressed_code);
@@ -269,6 +269,11 @@
                 showError("Internal error: " + error.toString());
             }
         });
+
+        // Trigger initial animation after button is created and configured
+        setTimeout(() => {
+            runButton.click();
+        }, 100);
     });
 
     // save code on Ctrl+S / Cmd+S
@@ -344,10 +349,6 @@
         editor.resize();
     });
 
-    // trigger initial animation
-    setTimeout(() => {
-        document.getElementById("run-button").click();
-    }, 500);
     console.log("finished setting up editor");
 </script>
 </body>
