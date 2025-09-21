@@ -72,16 +72,11 @@ pub fn get_examples() -> Vec<Example> {
         combination::parallel(),
         combination::sequence(),
         // GEOMETRY EFFECTS
-        geometry::translate(),
-        geometry::translate_buf(),
-        geometry::resize_area(),
+        // geometry::translate(),
+        // geometry::translate_buf(),
+        // geometry::resize_area(),
         // SHOWCASE EFFECTS
         showcase::explode_patterned(),
-        // CUSTOM EFFECTS
-        // custom::effect_fn(),
-        // custom::effect_fn_buf(),
-        // custom::offscreen_buffer(),
-        // custom::dynamic_area(),
     ]
 }
 
@@ -727,60 +722,61 @@ mod showcase {
 }
 
 // geometry effects
-mod geometry {
-    use super::*;
-    use indoc::indoc;
-
-    pub fn translate() -> Example {
-        Example {
-            id: "translate",
-            title: "Translate",
-            description: "Moves effect area",
-            category: Category::Advanced,
-            code: indoc! {"
-                let timer = EffectTimer::from_ms(1000, Interpolation::Linear);
-                let effect = fx::fade_to_fg(Color::Red, timer);
-                fx::translate(Some(effect), (5, 10), timer)
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
-
-    pub fn translate_buf() -> Example {
-        Example {
-            id: "translate_buf",
-            title: "Translate Buffer",
-            description: "Moves buffer contents",
-            category: Category::Advanced,
-            code: indoc! {"
-                let area = Rect::new(0, 0, 10, 10);
-                let mut buf = Buffer::empty(area);
-                Block::bordered()
-                    .title(\"translated\")
-                    .render(area, &mut buf);
-
-                let timer = EffectTimer::from_ms(1000, Interpolation::Linear);
-                fx::translate_buf(Offset { x: -30, y: 0 }, ref_count(buf), timer)
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
-
-    pub fn resize_area() -> Example {
-        Example {
-            id: "resize_area",
-            title: "Resize Area",
-            description: "Resizes effect area",
-            category: Category::Advanced,
-            code: indoc! {"
-                let timer = EffectTimer::from_ms(2000, Interpolation::CubicInOut);
-                let effect = fx::fade_to_fg(Color::Blue, timer);
-                fx::resize_area(Some(effect), Size::new(20, 10), timer)
-            "},
-            canvas: canvas::DEFAULT,
-        }
-    }
-}
+// todo: dsl-wiring
+// mod geometry {
+//     use super::*;
+//     use indoc::indoc;
+//
+//     pub fn translate() -> Example {
+//         Example {
+//             id: "translate",
+//             title: "Translate",
+//             description: "Moves effect area",
+//             category: Category::Advanced,
+//             code: indoc! {"
+//                 let timer = EffectTimer::from_ms(1000, Interpolation::Linear);
+//                 let effect = fx::fade_to_fg(Color::Red, timer);
+//                 fx::translate(Some(effect), (5, 10), timer)
+//             "},
+//             canvas: canvas::DEFAULT,
+//         }
+//     }
+//
+//     pub fn translate_buf() -> Example {
+//         Example {
+//             id: "translate_buf",
+//             title: "Translate Buffer",
+//             description: "Moves buffer contents",
+//             category: Category::Advanced,
+//             code: indoc! {"
+//                 let area = Rect::new(0, 0, 10, 10);
+//                 let mut buf = Buffer::empty(area);
+//                 Block::bordered()
+//                     .title(\"translated\")
+//                     .render(area, &mut buf);
+//
+//                 let timer = EffectTimer::from_ms(1000, Interpolation::Linear);
+//                 fx::translate_buf(Offset { x: -30, y: 0 }, ref_count(buf), timer)
+//             "},
+//             canvas: canvas::DEFAULT,
+//         }
+//     }
+//
+//     pub fn resize_area() -> Example {
+//         Example {
+//             id: "resize_area",
+//             title: "Resize Area",
+//             description: "Resizes effect area",
+//             category: Category::Advanced,
+//             code: indoc! {"
+//                 let timer = EffectTimer::from_ms(2000, Interpolation::CubicInOut);
+//                 let effect = fx::fade_to_fg(Color::Blue, timer);
+//                 fx::resize_area(Some(effect), Size::new(20, 10), timer)
+//             "},
+//             canvas: canvas::DEFAULT,
+//         }
+//     }
+// }
 
 mod canvas {
     pub const DEFAULT: &'static str = include_str!("../assets/default_canvas.ansi");
