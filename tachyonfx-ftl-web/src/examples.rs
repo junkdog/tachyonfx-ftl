@@ -6,8 +6,8 @@ pub struct Example {
     pub title: String,
     pub description: String,
     pub category: Category,
-    pub code: String,
-    pub canvas: String,
+    pub code: &'static str,
+    pub canvas: &'static str,
     pub tags: Vec<String>,
 }
 
@@ -37,11 +37,7 @@ impl std::fmt::Display for Category {
 pub fn get_examples() -> Vec<Example> {
     vec![
         // BASIC - Simple single effects
-        basic_fade_in(),
-        basic_fade_out(),
-        basic_slide_left(),
-        basic_slide_right(),
-        basic_typewriter(),
+        basic::fade_in(),
         // TRANSITIONS - Effect combinations
         fade_slide_combo(),
         cross_fade_transition(),
@@ -62,24 +58,24 @@ pub fn get_examples() -> Vec<Example> {
     ]
 }
 
-// Basic Examples
-fn basic_fade_in() -> Example {
-    Example {
-        id: "basic_fade_in".to_string(),
-        title: "Fade In".to_string(),
-        description: "Smoothly fade text from transparent to visible".to_string(),
-        category: Category::Basic,
-        code: r#"fx::fade_from_fg(Color::Black, (1500, QuadOut))"#.to_string(),
-        canvas: r#"Welcome to TachyonFX!
+// basic examples
+mod basic {
+    use super::*;
 
-This text will fade in smoothly
-using a quadratic easing curve.
-
-Perfect for gentle introductions!"#
-            .to_string(),
-        tags: vec!["fade".to_string(), "basic".to_string(), "color".to_string()],
+    pub fn fade_in() -> Example {
+        Example {
+            id: "basic_fade_in".to_string(),
+            title: "Fade In".to_string(),
+            description: "Smoothly fade text from transparent to visible".to_string(),
+            category: Category::Basic,
+            code: r#"fx::fade_from_fg(Color::Black, (1500, QuadOut))"#,
+            canvas: canvas::DEFAULT,
+            tags: vec!["fade".to_string(), "basic".to_string(), "color".to_string()],
+        }
     }
+
 }
+
 
 fn basic_fade_out() -> Example {
     Example {
@@ -506,4 +502,10 @@ Perfect for highlighting content!"#
             "reveal".to_string(),
         ],
     }
+}
+
+
+
+mod canvas {
+    pub const DEFAULT: &'static str = include_str!("../assets/default_canvas.ansi");
 }
