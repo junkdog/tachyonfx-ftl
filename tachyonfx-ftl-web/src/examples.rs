@@ -41,6 +41,7 @@ pub fn get_examples() -> Vec<Example> {
         basic::fade_to_fg(),
         basic::fade_from(),
         basic::hsl_shift(),
+        basic::hsl_shift_2(),
         basic::hsl_shift_fg(),
         basic::coalesce(),
         basic::coalesce_from(),
@@ -168,6 +169,25 @@ mod basic {
 
                 fx::hsl_shift(Some(fg_shift), Some(bg_shift), timer)
                     .with_pattern(SweepPattern::left_to_right(80))
+            "},
+            canvas: canvas::DEFAULT,
+        }
+    }
+
+    pub fn hsl_shift_2() -> Example {
+        Example {
+            id: "hsl_shift_2",
+            title: "HSL Shift 2",
+            description: "Color cycling effect",
+            category: Category::Basic,
+            code: indoc! {"
+                let fg_shift = [1440.0, 0.0, 20.0];
+                let timer = (2000, Interpolation::SineIn);
+
+                let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
+                    .with_pattern(SweepPattern::left_to_right(160));
+
+                fx::repeating(fx::remap_alpha(0.3333, 0.667, radial_hsl_xform))
             "},
             canvas: canvas::DEFAULT,
         }
