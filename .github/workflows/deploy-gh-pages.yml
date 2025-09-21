@@ -15,20 +15,23 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - name: Cache Rust toolchain and cargo
+    - name: Setup Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-unknown
+
+    - name: Cache Rust dependencies
       uses: actions/cache@v4
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          ~/.cargo/bin
-          target
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ~/.cargo/bin/
+          target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-
-
-    - name: Add WebAssembly target
-      run: rustup target add wasm32-unknown-unknown
 
     - name: Install trunk
       run: |
@@ -50,20 +53,23 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - name: Cache Rust toolchain and cargo
+    - name: Setup Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-unknown
+
+    - name: Cache Rust dependencies
       uses: actions/cache@v4
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          ~/.cargo/bin
-          target
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ~/.cargo/bin/
+          target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-
-
-    - name: Add WebAssembly target
-      run: rustup target add wasm32-unknown-unknown
 
     - name: Install trunk
       run: |
