@@ -746,7 +746,7 @@ mod geometry {
         Example {
             id: "translate",
             title: "Translate",
-            description: "Translates effect by pixel offset",
+            description: "Translates effect by cell offset",
             category: Category::Advanced,
             code: indoc! {"
                 let content_area = Rect::new(12, 7, 80, 17);
