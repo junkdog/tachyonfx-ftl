@@ -315,7 +315,7 @@
 }
 
 .example-item {
-    padding: 10px 12px;
+    padding: 6px 8px;
     margin: 0 4px;
     background-color: #1d2021;
     border: 1px solid #282828;
@@ -348,7 +348,7 @@
     color: #a89984;
     font-size: 11px;
     line-height: 1.4;
-    margin-bottom: 6px;
+    margin-bottom: 0;
 }
 
 
