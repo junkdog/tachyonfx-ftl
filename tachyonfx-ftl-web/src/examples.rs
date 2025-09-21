@@ -539,7 +539,7 @@ mod timing {
                 let timer = (1000, Interpolation::SineIn);
 
                 let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
-                    .with_pattern(RadialPattern::with_transition((0.5, 0.5), 4.0));
+                    .with_pattern(RadialPattern::with_transition((0.5, 0.5), 13.0));
 
                 fx::repeating(fx::ping_pong(radial_hsl_xform))
             "},
