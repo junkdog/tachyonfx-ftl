@@ -235,7 +235,8 @@ class ExamplePanel {
                     window.wasmBindings.compile_dsl(code);
                 }
 
-                // Keep example parameter in URL for shareable links
+                // Remove example parameter so page reloads don't override user changes
+                updateQueryParam('example', null);
 
                 console.log(`Loaded example: ${result.title}`);
             } else {
