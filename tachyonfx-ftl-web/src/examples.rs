@@ -710,16 +710,9 @@ mod showcase {
 
                 // original positions of exploded cells are Color::Black;
                 // let's color it to the screen bg
-                let fill_exploded_cells = fx::fade_to(screen_bg, screen_bg, 1) // 1ms timer
-                    .with_filter(CellFilter::AllOf(vec![
-                        CellFilter::BgColor(Color::Black),
-                        CellFilter::FgColor(Color::Black),
-                    ]))
+                let fill_exploded_cells = fx::paint(screen_bg, screen_bg, timer)
+                    .with_filter(CellFilter::BgColor(Color::Black))
                     .with_area(content_area);
-
-                // forcing `fill_exploded_cells` to run at progression 100% (fully
-                // transformed colors) for the full effect duration
-                let black_to_screen_bg = fx::prolong_end(timer, fill_exploded_cells);
 
                 // reverse-explode the content back in
                 let implode = fx::explode(10.0, 3.0, explode_timer)
@@ -731,7 +724,7 @@ mod showcase {
                     fade_to_screen_bg, // fade exploded cell (before exploding/moving them)
                     sweeping_explode,               // explosion goes left-to-right
                     fx::delay(fade_timer, implode), // implode the content back in
-                    black_to_screen_bg,             // runs continously
+                    fill_exploded_cells,            // runs continously
                 ])
             "#},
             canvas: canvas::DEFAULT,
