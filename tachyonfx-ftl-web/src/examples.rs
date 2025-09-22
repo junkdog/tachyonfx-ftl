@@ -182,13 +182,24 @@ mod basic {
             description: "Color cycling effect",
             category: Category::Basic,
             code: indoc! {"
-                let fg_shift = [1300.0, 0.0, 0.0];
+                let content_area = Rect::new(12, 7, 80, 17);
+
+                let fg_shift = [1440.0, 0.0, 0.0];
+                let bg_shift = [5760.0, 0.0, 0.0];
                 let timer = 2000;
 
-                let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
-                    .with_pattern(SweepPattern::left_to_right(160));
+                let hsl_fg_xform = fx::hsl_shift_fg(fg_shift, timer)
+                    .with_pattern(SweepPattern::left_to_right(160))
+                    .with_area(content_area);
 
-                fx::repeating(fx::remap_alpha(0.3333, 0.6667, radial_hsl_xform))
+                let hsl_bg_xform = fx::hsl_shift(None, Some(fg_shift), timer)
+                    .with_pattern(SweepPattern::right_to_left(230))
+                    .with_filter(CellFilter::Not(Box::new(CellFilter::Area(content_area))));
+
+                fx::parallel(&[
+                    fx::repeating(fx::remap_alpha(0.3333, 0.6667, hsl_fg_xform)),
+                    fx::repeating(fx::remap_alpha(0.3333, 0.6667, hsl_bg_xform))
+                ])
             "},
             canvas: canvas::DEFAULT,
         }
