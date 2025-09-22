@@ -194,12 +194,12 @@ mod basic {
 
                 let hsl_bg_xform = fx::hsl_shift(None, Some(fg_shift), timer)
                     .with_pattern(SweepPattern::right_to_left(230))
-                    .with_filter(CellFilter::Not(Box::new(CellFilter::Area(content_area))));
+                    .with_filter(CellFilter::Area(content_area).negated());
 
-                fx::parallel(&[
-                    fx::repeating(fx::remap_alpha(0.3333, 0.6667, hsl_fg_xform)),
-                    fx::repeating(fx::remap_alpha(0.3333, 0.6667, hsl_bg_xform))
-                ])
+                fx::repeating(fx::parallel(&[
+                    fx::remap_alpha(0.3333, 0.6667, hsl_fg_xform),
+                    fx::remap_alpha(0.3333, 0.6667, hsl_bg_xform),
+                ]))
             "},
             canvas: canvas::DEFAULT,
         }
