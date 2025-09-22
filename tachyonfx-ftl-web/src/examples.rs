@@ -439,7 +439,10 @@ mod basic {
                 let content_area = Rect::new(12, 7, 80, 17);
                 let fg = Color::from_u32(0xfe8019);
                 let bg = Color::from_u32(0x1d2021);
-                fx::paint(fg, bg, 1000).with_area(content_area)
+
+                fx::paint(fg, bg, 1000)
+                    .with_area(content_area)
+                    .with_pattern(SweepPattern::left_to_right(1))
             "},
             canvas: canvas::DEFAULT,
         }
