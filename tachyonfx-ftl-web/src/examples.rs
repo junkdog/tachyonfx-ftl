@@ -50,6 +50,9 @@ pub fn get_examples() -> Vec<Example> {
         basic::evolve(),
         basic::evolve_into(),
         basic::evolve_from(),
+        basic::paint(),
+        basic::paint_fg(),
+        basic::paint_bg(),
         basic::sweep_in(),
         basic::sweep_out(),
         basic::slide_in(),
@@ -421,6 +424,51 @@ mod basic {
                 fx::evolve_from((EvolveSymbolSet::Quadrants, style), timer)
                     .with_pattern(DissolvePattern::new())
                     .with_area(content_area)
+            "},
+            canvas: canvas::DEFAULT,
+        }
+    }
+
+    pub fn paint() -> Example {
+        Example {
+            id: "paint",
+            title: "Paint",
+            description: "Paints foreground and background colors",
+            category: Category::Basic,
+            code: indoc! {"
+                let content_area = Rect::new(12, 7, 80, 17);
+                let fg = Color::from_u32(0xfe8019);
+                let bg = Color::from_u32(0x1d2021);
+                fx::paint(fg, bg, 1000).with_area(content_area)
+            "},
+            canvas: canvas::DEFAULT,
+        }
+    }
+
+    pub fn paint_fg() -> Example {
+        Example {
+            id: "paint_fg",
+            title: "Paint Foreground",
+            description: "Paints only foreground color",
+            category: Category::Basic,
+            code: indoc! {"
+                let target_color = Color::from_u32(0x8ec07c);
+                fx::paint_fg(target_color, 1000)
+            "},
+            canvas: canvas::DEFAULT,
+        }
+    }
+
+    pub fn paint_bg() -> Example {
+        Example {
+            id: "paint_bg",
+            title: "Paint Background",
+            description: "Paints only background color",
+            category: Category::Basic,
+            code: indoc! {"
+                let content_area = Rect::new(12, 7, 80, 17);
+                let target_color = Color::from_u32(0x3c3836);
+                fx::paint_bg(target_color, 1000).with_area(content_area)
             "},
             canvas: canvas::DEFAULT,
         }
