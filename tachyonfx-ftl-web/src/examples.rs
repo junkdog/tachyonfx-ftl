@@ -179,13 +179,13 @@ mod basic {
             description: "Color cycling effect",
             category: Category::Basic,
             code: indoc! {"
-                let fg_shift = [1300.0, 0.0, 20.0];
+                let fg_shift = [1300.0, 0.0, 0.0];
                 let timer = 2000;
 
                 let radial_hsl_xform = fx::hsl_shift_fg(fg_shift, timer)
                     .with_pattern(SweepPattern::left_to_right(160));
 
-                fx::repeating(fx::remap_alpha(0.3333, 0.667, radial_hsl_xform))
+                fx::repeating(fx::remap_alpha(0.3333, 0.6667, radial_hsl_xform))
             "},
             canvas: canvas::DEFAULT,
         }
