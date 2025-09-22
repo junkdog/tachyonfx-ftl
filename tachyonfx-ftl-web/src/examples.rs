@@ -442,7 +442,7 @@ mod basic {
 
                 fx::paint(fg, bg, 1000)
                     .with_area(content_area)
-                    .with_pattern(SweepPattern::left_to_right(1))
+                    .with_pattern(DiagonalPattern::bottom_left_to_top_right(1))
             "},
             canvas: canvas::DEFAULT,
         }
@@ -761,7 +761,7 @@ mod showcase {
 
                 // original positions of exploded cells are Color::Black;
                 // let's color it to the screen bg
-                let fill_exploded_cells = fx::paint(screen_bg, screen_bg, timer)
+                let fill_exploded_cells = fx::paint_bg(screen_bg, timer)
                     .with_filter(CellFilter::BgColor(Color::Black))
                     .with_area(content_area);
 
