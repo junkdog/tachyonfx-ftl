@@ -684,7 +684,7 @@ mod showcase {
                 let screen_bg = Color::from_u32(0x1d2021);
 
                 // patterns control effect progression
-                let sweep = SweepPattern::left_to_right(40);
+                let sweep = SweepPattern::left_to_right(30);
                 let radial = RadialPattern::center().with_transition_width(20.0);
 
                 let timer = 1600;
@@ -711,7 +711,10 @@ mod showcase {
                 // original positions of exploded cells are Color::Black;
                 // let's color it to the screen bg
                 let fill_exploded_cells = fx::fade_to(screen_bg, screen_bg, 1) // 1ms timer
-                    .with_filter(CellFilter::BgColor(Color::Black))
+                    .with_filter(CellFilter::AllOf(vec![
+                        CellFilter::BgColor(Color::Black),
+                        CellFilter::FgColor(Color::Black),
+                    ]))
                     .with_area(content_area);
 
                 // forcing `fill_exploded_cells` to run at progression 100% (fully
@@ -723,7 +726,6 @@ mod showcase {
                     .with_area(content_area)
                     .with_pattern(radial)
                     .reversed();
-
 
                 fx::parallel(&[
                     fade_to_screen_bg, // fade exploded cell (before exploding/moving them)
