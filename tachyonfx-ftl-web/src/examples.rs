@@ -79,6 +79,7 @@ pub fn get_examples() -> Vec<Example> {
         geometry::translate(),
         // SHOWCASE EFFECTS
         showcase::explode_patterned(),
+        showcase::fire(),
     ]
 }
 
@@ -789,6 +790,63 @@ mod showcase {
                     fill_exploded_cells,            // runs continously
                 ])
             "#},
+            canvas: canvas::DEFAULT,
+        }
+    }
+
+    pub fn fire() -> Example {
+        Example {
+            id: "fire",
+            title: "Fire",
+            description: "A fire-like effect",
+            category: Category::Showcase,
+            code: indoc! {"
+                let content_area = Rect::new(12, 7, 80, 17);
+                let screen_bg = Color::from_u32(0x1D2021);
+                let content_bg = Color::from_u32(0x32302F);
+
+                let style = Style::default()
+                    .bg(content_bg)
+                    .fg(screen_bg);
+
+                let boot_style = Style::default()
+                    .fg(content_bg)
+                    .bg(screen_bg);
+
+                let boot_timer = (300, Interpolation::CircIn);
+                let timer = (900, QuadIn);
+
+                let startup = fx::evolve((EvolveSymbolSet::Shaded, boot_style), boot_timer)
+                    .with_pattern(RadialPattern::with_transition((0.5, 0.5), 10.0))
+                    .with_area(content_area);
+
+                // the effect runs reversed() so that the symbols appear
+                // to flicker out; since it's reversed, the applied pattern
+                // is the same as DissolvePattern if the effect wasn't rersed
+                let inner_fire_fx = fx::evolve_from((EvolveSymbolSet::Quadrants, style), timer)
+                    .with_pattern(CoalescePattern::new())
+                    .with_area(content_area)
+                    .reversed();
+
+                // moving the rendered area upwards to mimic of fire
+                let fire = fx::translate(inner_fire_fx, Offset { x: 0, y: -22 }, timer)
+                    .with_area(content_area);
+
+                let fade_in_text = fade_from(screen_bg, screen_bg, timer)
+                    .with_filter(CellFilter::Text)
+                    .with_area(content_area)
+                    .with_pattern(CoalescePattern::new());
+
+
+                fx::prolong_start(300, fx::sequence(&[
+                    startup,
+                    fx::parallel(&[
+                        fx::fade_from(screen_bg, screen_bg, 300),
+                        fire,
+                        fade_in_text,
+                    ])
+                ]))
+            "},
             canvas: canvas::DEFAULT,
         }
     }
