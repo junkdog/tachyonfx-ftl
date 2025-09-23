@@ -816,7 +816,7 @@ mod geometry {
                     .with_pattern(DissolvePattern::new())
                     .with_area(content_area);
 
-                fx::translate(Some(inner_effect), (0, -18), timer)
+                fx::translate(inner_effect, Offset { x: 0, y: -18 }, timer)
                     .with_area(content_area)
             "},
             canvas: canvas::DEFAULT,
