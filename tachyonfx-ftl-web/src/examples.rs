@@ -806,17 +806,13 @@ mod showcase {
                 let content_bg = Color::from_u32(0x32302F);
 
                 let style = Style::default()
-                    .bg(content_bg)
-                    .fg(screen_bg);
-
-                let boot_style = Style::default()
                     .fg(content_bg)
                     .bg(screen_bg);
 
                 let boot_timer = (300, Interpolation::CircIn);
                 let timer = (900, QuadIn);
 
-                let startup = fx::evolve((EvolveSymbolSet::Shaded, boot_style), boot_timer)
+                let startup = fx::evolve((EvolveSymbolSet::Shaded, style), boot_timer)
                     .with_pattern(RadialPattern::with_transition((0.5, 0.5), 10.0))
                     .with_area(content_area);
 
