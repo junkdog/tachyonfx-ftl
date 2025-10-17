@@ -30,11 +30,26 @@ function decodeAndInflate(b64) {
 
 function updateCodeAndCanvas(editor, canvasInput) {
     const params = new URLSearchParams(window.location.search);
+    const codeRaw = params.get("code_raw");
     const code = params.get("code");
     const canvas = params.get("canvas");
-    const canvasId = params.get("canvasId");
+    const canvasId = params.get("canvas_id");
 
-    if (code) {
+    if (codeRaw) {
+        // Convert raw code to compressed format and update URL
+        try {
+            const compressed = deflateAndEncode(codeRaw);
+            editor.setValue(codeRaw, -1);
+
+            // Update URL: remove code_raw, set code
+            const url = new URL(window.location);
+            url.searchParams.delete("code_raw");
+            url.searchParams.set("code", compressed);
+            history.replaceState(null, "", url);
+        } catch (e) {
+            console.warn("Failed to encode raw code", e);
+        }
+    } else if (code) {
         try {
             let dsl = decodeAndInflate(code);
             editor.setValue(dsl, -1);
