@@ -32,6 +32,7 @@ function updateCodeAndCanvas(editor, canvasInput) {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const canvas = params.get("canvas");
+    const canvasId = params.get("canvasId");
 
     if (code) {
         try {
@@ -42,7 +43,19 @@ function updateCodeAndCanvas(editor, canvasInput) {
         }
     }
 
-    if (canvas) {
+    if (canvasId === "tfxdocs") {
+        try {
+            canvasInput.value = `\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m┌\x1b[0m\x1b[38;5;142m\x1b[48;2;29;32;33m\x1b[1m tachyonfx live demo \x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m─────────────────┐\x1b[0m
+\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m\x1b[48;2;29;32;33m      \x1b[0m\x1b[38;5;214m\x1b[48;2;29;32;33mTerminal effects\x1b[0m\x1b[48;2;29;32;33m rendered       \x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m
+\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m\x1b[48;2;29;32;33m     in your \x1b[0m\x1b[38;5;109m\x1b[48;2;29;32;33mbrowser\x1b[0m\x1b[48;2;29;32;33m with \x1b[0m\x1b[38;5;167m\x1b[48;2;29;32;33mWebGL2\x1b[0m\x1b[48;2;29;32;33m!     \x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m
+\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m\x1b[48;2;29;32;33m                                      \x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m
+\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m\x1b[48;2;29;32;33m      ▁▂▃▄▅▆▇█  \x1b[0m\x1b[38;5;142m\x1b[48;2;29;32;33m● \x1b[0m\x1b[38;5;214m\x1b[48;2;29;32;33m● \x1b[0m\x1b[38;5;167m\x1b[48;2;29;32;33m●\x1b[0m\x1b[48;2;29;32;33m  █▇▆▅▄▃▂▁       \x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m│\x1b[0m
+\x1b[0m\x1b[38;5;208m\x1b[48;2;29;32;33m└──────────────────────────────────────┘\x1b[0m
+`;
+        } catch (e) {
+            console.warn("Invalid compressed buffer in ?canvas", e);
+        }
+    } else if (canvas) {
         try {
             canvasInput.value = decodeAndInflate(canvas);
         } catch (e) {
