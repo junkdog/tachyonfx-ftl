@@ -71,6 +71,76 @@ pub fn load_example(example_id: &str) -> String {
     }
 }
 
+#[wasm_bindgen]
+pub fn get_completions(source: &str, line: usize, column: usize) -> String {
+    use tachyonfx::dsl::CompletionEngine;
+
+    log_info(format!("source: {}, line: {}, column: {}", source, line, column));
+
+    // Convert line/column to cursor index (byte offset)
+    // Ace editor uses 0-indexed line/column, so convert to 1-indexed for our function
+    let cursor_index = line_column_to_offset(source, line + 1, column + 1);
+
+    // Get completions from the completion engine
+    let engine = CompletionEngine::new();
+
+    let echoed_source = engine.echo_source(source, cursor_index);
+    log_info(format!("echoed source: '{}'", echoed_source));
+
+    let completions = engine.completions(source, cursor_index);
+
+    // Convert to Ace editor format and then JSON
+    // Ace expects: { value: string, score: number, meta: string }
+    let json_completions: Vec<_> = completions
+        .iter()
+        .enumerate()
+        .map(|(idx, c)| {
+            serde_json::json!({
+                "value": c.label,
+                "score": 1000 - idx, // Higher score for earlier matches (already sorted by relevance)
+                "meta": c.meta.as_deref().unwrap_or(""),
+            })
+        })
+        .collect();
+
+
+
+    // Log as JSON object for better browser console inspection
+    let js_value = serde_wasm_bindgen::to_value(&json_completions)
+        .unwrap_or_else(|_| JsValue::from_str("[]"));
+    web_sys::console::log_2(&JsValue::from_str("completions:"), &js_value);
+
+    // Return as JSON string for the caller
+    serde_json::to_string(&json_completions).unwrap_or_else(|_| "[]".to_string())
+}
+
+fn log_info(msg: impl Into<String>) {
+    let msg = msg.into();
+    web_sys::console::info_1(&JsValue::from_str(&msg));
+}
+
+/// Converts 1-indexed line/column to byte offset in source string
+fn line_column_to_offset(source: &str, line: usize, column: usize) -> u32 {
+    let mut current_line = 1;
+    let mut current_column = 1;
+
+    for (byte_offset, ch) in source.char_indices() {
+        if current_line == line && current_column == column {
+            return byte_offset as u32;
+        }
+
+        if ch == '\n' {
+            current_line += 1;
+            current_column = 1;
+        } else {
+            current_column += 1;
+        }
+    }
+
+    // If we reach the end, return the source length
+    source.len() as u32
+}
+
 // Compress using raw deflate (no headers) to match JavaScript pako.deflate()
 fn compress_and_encode(input: &str) -> String {
     let input_bytes = input.as_bytes();
