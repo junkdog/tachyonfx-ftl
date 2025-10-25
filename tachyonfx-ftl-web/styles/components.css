@@ -169,8 +169,13 @@
 
 /* used by ace-editor for configuring width of suggestion popup */
 .ace_autocomplete {
-    width: 400px !important; /* Adjust this value to change the width */
-    max-width: 60vw !important;
+    width: 500px !important; /* Wider fixed width to show full text */
+    max-width: 70vw !important; /* Scale down on smaller screens */
+}
+
+/* Allow the completion items to use full width */
+.ace_autocomplete .ace_line {
+    max-width: none !important;
 }
 
 /* Examples Panel Styling */
