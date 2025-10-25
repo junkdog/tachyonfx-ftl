@@ -1,0 +1,1 @@
+const tfxCustomCompleter={getCompletions:((a,b,c,d,e)=>{let f=null;if(window.wasmBindings&&window.wasmBindings.get_completions){try{const a=b.getValue();const d=c.row;const g=c.column;const h=window.wasmBindings.get_completions(a,d,g);const i=JSON.parse(h);e(f,i)}catch(a){console.error(`Error getting completions from Rust:`,a);e(f,[])}}else{e(f,[])}})}
