@@ -178,6 +178,67 @@
     max-width: none !important;
 }
 
+/* Completion kind styling with Gruvbox colors */
+/* Note: Ace Editor prefixes className with "ace_" */
+
+.ace_completion-kind-method {
+    color: #b8bb26 !important; /* bright green for methods */
+}
+
+.ace_completion-kind-method::before {
+    color: #98971a; /* dim green */
+}
+
+.ace_completion-kind-function {
+    color: #fabd2f !important; /* yellow for functions */
+}
+
+.ace_completion-kind-function::before {
+    content: "ƒ ";
+    color: #d79921; /* dim yellow */
+}
+
+.ace_completion-kind-constant {
+    color: #d3869b !important; /* purple for constants */
+}
+
+.ace_completion-kind-constant::before {
+    color: #b16286; /* dim purple */
+}
+
+.ace_completion-kind-parameter {
+    color: #fe8019 !important; /* orange for parameters */
+}
+
+.ace_completion-kind-parameter::before {
+    color: #d65d0e; /* dim orange */
+}
+
+.ace_completion-kind-variable {
+    color: #83a598 !important; /* blue for variables */
+}
+
+.ace_completion-kind-variable::before {
+    color: #458588; /* dim blue */
+}
+
+.ace_completion-kind-type {
+    color: #8ec07c !important; /* aqua for types */
+}
+
+.ace_completion-kind-type::before {
+    color: #689d6a; /* dim aqua */
+}
+
+.ace_completion-kind-field {
+    color: #fb4934 !important; /* red for fields */
+}
+
+.ace_completion-kind-field::before {
+    content: "⬩ ";
+    color: #cc241d; /* dim red */
+}
+
 /* Examples Panel Styling */
 .examples-header {
     display: flex;

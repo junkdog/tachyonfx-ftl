@@ -90,16 +90,21 @@ pub fn get_completions(source: &str, line: usize, column: usize) -> String {
     let completions = engine.completions(source, cursor_index);
 
     // Convert to Ace editor format and then JSON
-    // Ace expects: { value: string, score: number, meta: string, snippet?: string }
+    // Ace expects: { value: string, score: number, meta: string, snippet?: string, className?: string }
     // If insert_text is available, use it as snippet for cursor positioning
+    // className is used for visual styling based on completion kind
     let json_completions: Vec<_> = completions
         .iter()
         .enumerate()
         .map(|(idx, c)| {
+            // Map CompletionKind to CSS class name for styling
+            let kind_class = format!("completion-kind-{}", completion_kind_to_string(&c.kind));
+
             let mut completion = serde_json::json!({
                 "value": c.label,
                 "score": 1000 - idx, // Higher score for earlier matches (already sorted by relevance)
                 "meta": c.detail.as_str(),
+                "className": kind_class,
             });
 
             // Add snippet field if insert_text is available (for cursor positioning)
@@ -120,6 +125,21 @@ pub fn get_completions(source: &str, line: usize, column: usize) -> String {
 
     // Return as JSON string for the caller
     serde_json::to_string(&json_completions).unwrap_or_else(|_| "[]".to_string())
+}
+
+/// Converts CompletionKind to a lowercase string for CSS class naming
+fn completion_kind_to_string(kind: &tachyonfx::dsl::CompletionKind) -> &'static str {
+    use tachyonfx::dsl::CompletionKind;
+
+    match kind {
+        CompletionKind::Method => "method",
+        CompletionKind::Function => "function",
+        CompletionKind::Constant => "constant",
+        CompletionKind::Parameter => "parameter",
+        CompletionKind::Variable => "variable",
+        CompletionKind::Type => "type",
+        CompletionKind::Field => "field",
+    }
 }
 
 fn log_info(msg: impl Into<String>) {
