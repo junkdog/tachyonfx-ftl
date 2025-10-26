@@ -98,7 +98,7 @@ pub fn get_completions(source: &str, line: usize, column: usize) -> String {
             serde_json::json!({
                 "value": c.label,
                 "score": 1000 - idx, // Higher score for earlier matches (already sorted by relevance)
-                "meta": c.meta.as_deref().unwrap_or(""),
+                "meta": c.detail.as_str(),
             })
         })
         .collect();
