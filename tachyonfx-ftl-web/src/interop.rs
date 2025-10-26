@@ -90,16 +90,24 @@ pub fn get_completions(source: &str, line: usize, column: usize) -> String {
     let completions = engine.completions(source, cursor_index);
 
     // Convert to Ace editor format and then JSON
-    // Ace expects: { value: string, score: number, meta: string }
+    // Ace expects: { value: string, score: number, meta: string, snippet?: string }
+    // If insert_text is available, use it as snippet for cursor positioning
     let json_completions: Vec<_> = completions
         .iter()
         .enumerate()
         .map(|(idx, c)| {
-            serde_json::json!({
+            let mut completion = serde_json::json!({
                 "value": c.label,
                 "score": 1000 - idx, // Higher score for earlier matches (already sorted by relevance)
                 "meta": c.detail.as_str(),
-            })
+            });
+
+            // Add snippet field if insert_text is available (for cursor positioning)
+            if let Some(ref insert_text) = c.insert_text {
+                completion["snippet"] = serde_json::Value::String(insert_text.clone());
+            }
+
+            completion
         })
         .collect();
 
