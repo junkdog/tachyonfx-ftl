@@ -78,44 +78,44 @@
     <button id="close-error" class="close-error">×</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.js"></script>
+
 <script data-trunk src="./scripts/completions.js" data-target-path="scripts/"></script>
 <script data-trunk src="./scripts/redirect.js" data-target-path="scripts/"></script>
 <script data-trunk src="./scripts/editor.js" data-target-path="scripts/"></script>
 <script data-trunk src="./scripts/query-params.js" data-target-path="scripts/"></script>
 <script data-trunk src="./scripts/examples.js" data-target-path="scripts/"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ext-language_tools.js"></script>
-
-<script type="module">
+<script>
     Error.stackTraceLimit = 100;
-    
+
     // Backend switcher functionality
     window.switchBackend = function(backend) {
         const params = new URLSearchParams(window.location.search);
         params.set('backend', backend);
         window.location.href = window.location.pathname + '?' + params.toString();
     };
-    
+
     // Highlight current backend
     function highlightCurrentBackend() {
         const params = new URLSearchParams(window.location.search);
         const currentBackend = params.get('backend') || 'webgl2';
-        
+
         document.querySelectorAll('.backend-link').forEach(link => {
             link.classList.remove('active');
         });
-        
+
         const activeLink = document.getElementById(currentBackend + '-link');
         if (activeLink) {
             activeLink.classList.add('active');
         }
     }
-    
+
     // Initialize backend highlighting on page load
     highlightCurrentBackend();
-    
+
     const editor = setupEditor();
     editor.completers = [tfxCustomCompleter];
     console.log("completions loaded", tfxCustomCompleter);
