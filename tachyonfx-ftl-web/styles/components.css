@@ -194,7 +194,6 @@
 }
 
 .ace_completion-kind-function::before {
-    content: "ƒ ";
     color: #d79921; /* dim yellow */
 }
 
