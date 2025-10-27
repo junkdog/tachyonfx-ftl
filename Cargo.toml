@@ -13,7 +13,7 @@ ratatui = { version = "0.29.0", default-features = false }
 tachyonfx = { git = "https://github.com/junkdog/tachyonfx", branch = "development", default-features = false, features = ["std"] }
 #tachyonfx = { path = "../tachyonfx", default-features = false, features = ["std"] }
 ansi-to-tui = "7.0.0"
-wasm-bindgen = "0.2.103"
+wasm-bindgen = "0.2.105"
 bitflags = "2.9.0"
 web-time = "1.1.0"
 crossterm = "0.28.1"
