@@ -9,7 +9,7 @@ description = "Web interface for tachyonfx effect DSL editor"
 [dependencies]
 tfxed-core = { path = "../tachyonfx-ftl-core", features = ["web-backend"] }
 ratatui = { workspace = true, default-features = false }
-ratzilla = { git = "https://github.com/orhun/ratzilla", branch = "main" }
+ratzilla = { git = "https://github.com/junkdog/ratzilla", branch = "beamterm-latest" }
 #ratzilla = { path = "../../ratzilla" }
 console_error_panic_hook = { workspace = true }
 eyre = { workspace = true }

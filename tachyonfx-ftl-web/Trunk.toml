@@ -5,4 +5,4 @@ public_url = "/tachyonfx-ftl"  # The public URL from which assets are to be serv
 minify = "on_release"          # Control minification: can be one of: never, on_release, always
 
 [tools]
-wasm_bindgen = "0.2.103"       # Use wasm-bindgen 0.2.103 to match project dependencies
+wasm_bindgen = "0.2.105"
