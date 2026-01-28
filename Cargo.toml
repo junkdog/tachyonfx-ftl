@@ -13,7 +13,7 @@ ratatui = { version = "0.30.0", default-features = false, feature = ["layout-cac
 tachyonfx = { version = "0.23.0", default-features = false, features = ["std"] }
 #tachyonfx = { path = "../tachyonfx", default-features = false, features = ["std"] }
 ansi-to-tui = "8.0.1"
-wasm-bindgen = "0.2.106"
+wasm-bindgen = "0.2.108"
 bitflags = "2.9.0"
 web-time = "1.1.0"
 crossterm = "0.29.0"
