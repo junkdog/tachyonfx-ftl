@@ -11,7 +11,7 @@ tfxed-core = { path = "../tachyonfx-ftl-core" }
 ratatui = { workspace = true, features = ["crossterm"] }
 crossterm = { workspace = true }
 color-eyre = { workspace = true }
-tachyonfx = { workspace = true, default-features = false, features = ["dsl", "crossterm"] }
+tachyonfx = { workspace = true, default-features = false, features = ["dsl"]}
 ansi-to-tui = { workspace = true }
 
 [[bin]]

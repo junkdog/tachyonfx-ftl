@@ -8,15 +8,15 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-ratatui = { version = "0.29.0", default-features = false }
+ratatui = { version = "0.30.0", default-features = false, feature = ["layout-cache"] }
 # tachyonfx = { version = "0.19.0", default-features = false, features = ["std"] }
-tachyonfx = { git = "https://github.com/junkdog/tachyonfx", branch = "development", default-features = false, features = ["std"] }
+tachyonfx = { version = "0.23.0", default-features = false, features = ["std"] }
 #tachyonfx = { path = "../tachyonfx", default-features = false, features = ["std"] }
-ansi-to-tui = "7.0.0"
-wasm-bindgen = "0.2.105"
+ansi-to-tui = "8.0.1"
+wasm-bindgen = "0.2.106"
 bitflags = "2.9.0"
 web-time = "1.1.0"
-crossterm = "0.28.1"
+crossterm = "0.29.0"
 color-eyre = "0.6.3"
 console_error_panic_hook = "0.1"
 eyre = "0.6.12"

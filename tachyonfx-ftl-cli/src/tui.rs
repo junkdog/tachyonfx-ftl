@@ -20,7 +20,10 @@ pub struct Tui<BACKEND: Backend> {
     events: EventHandler,
 }
 
-impl<BACKEND: Backend + 'static> Tui<BACKEND> {
+impl<BACKEND: Backend + 'static> Tui<BACKEND>
+where
+    io::Error: From<BACKEND::Error>,
+{
     pub fn new(terminal: Terminal<BACKEND>, events: EventHandler) -> Self {
         Self { terminal, events }
     }
