@@ -80,6 +80,7 @@ pub fn get_examples() -> Vec<Example> {
         // SHOWCASE EFFECTS
         showcase::explode_patterned(),
         showcase::fire(),
+        showcase::wave_pattern(),
     ]
 }
 
@@ -843,6 +844,45 @@ mod showcase {
                     ])
                 ]))
             "},
+            canvas: canvas::DEFAULT,
+        }
+    }
+    pub fn wave_pattern() -> Example {
+        Example {
+            id: "wave_pattern",
+            title: "Wave Pattern",
+            description: "Organic reveal using oscillator-driven wave patterns",
+            category: Category::Showcase,
+            code: indoc! {r#"
+                let content_area = Rect::new(12, 7, 80, 17);
+
+                let style = Style::default()
+                    .fg(Color::from_u32(0x32302F))  // content area bg
+                    .bg(Color::from_u32(0x1D2021)); // screen area bg
+
+                let timer = EffectTimer::from_ms(750, Interpolation::Linear);
+
+                let wave_a = Oscillator::sin(0.0, 0.3, -1.0);
+                let wave_b = Oscillator::cos(0.2, 0.1, 0.3)
+                    .modulated_by(Modulator::sawtooth(-0.5, 0.2, -0.5).on_amplitude());
+
+                let wave_layer = WaveLayer::new(wave_a).average(wave_b);
+                let p = WavePattern::new(wave_layer);
+
+                fx::prolong_start(500, fx::parallel(&[
+                    // organically evolving into content
+                    fx::evolve_into((EvolveSymbolSet::BlocksHorizontal, style), 1200)
+                        .with_pattern(p.clone()),
+
+                    // coalesce foreground symbols using the same pattern
+                    fx::coalesce(timer)
+                        .with_pattern(p),
+
+                    // start faded to remove rough corners
+                    fx::fade_from(Color::from_u32(0x1D2021), Color::from_u32(0x1D2021), 500)
+                        .with_color_space(Rgb)
+                ]).with_area(content_area))
+            "#},
             canvas: canvas::DEFAULT,
         }
     }
