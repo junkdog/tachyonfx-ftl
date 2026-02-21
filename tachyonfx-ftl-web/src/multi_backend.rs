@@ -2,8 +2,9 @@ use eyre::{eyre, Result};
 use ratatui::{Frame, Terminal as RatTerminal};
 use ratzilla::{
     backend::{canvas::CanvasBackendOptions, webgl2::WebGl2BackendOptions},
-    event::KeyEvent,
-    CanvasBackend, WebGl2Backend, WebRenderer,
+    error::Error,
+    event::{KeyEvent, MouseEvent},
+    CanvasBackend, FontAtlasConfig, WebGl2Backend, WebRenderer,
 };
 
 #[derive(Debug)]
@@ -34,7 +35,8 @@ impl MultiBackend {
         match get_backend_type() {
             BackendType::WebGl2 => {
                 let options = WebGl2BackendOptions::new()
-                    .enable_mouse_selection()
+                    .enable_mouse_selection_with_mode(Default::default())
+                    // .font_atlas_config(FontAtlasConfig::dynamic(&["Hack"], 15.0))
                     .grid_id(grid_id);
 
                 let backend = WebGl2Backend::new_with_options(options).map_err(|e| eyre!("{e}"))?;
@@ -63,13 +65,23 @@ impl WebRenderer for MultiBackend {
         }
     }
 
-    fn on_key_event<F>(&self, callback: F)
+    fn on_key_event<F>(&mut self, callback: F) -> Result<(), Error>
     where
         F: FnMut(KeyEvent) + 'static,
     {
         match self {
             MultiBackend::WebGl2(terminal) => terminal.on_key_event(callback),
             MultiBackend::Canvas(terminal) => terminal.on_key_event(callback),
+        }
+    }
+
+    fn on_mouse_event<F>(&mut self, callback: F) -> Result<(), Error>
+    where
+        F: FnMut(MouseEvent) + 'static,
+    {
+        match self {
+            MultiBackend::WebGl2(terminal) => terminal.on_mouse_event(callback),
+            MultiBackend::Canvas(terminal) => terminal.on_mouse_event(callback),
         }
     }
 }

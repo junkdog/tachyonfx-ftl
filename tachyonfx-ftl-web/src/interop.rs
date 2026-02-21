@@ -75,7 +75,10 @@ pub fn load_example(example_id: &str) -> String {
 pub fn get_completions(source: &str, line: usize, column: usize) -> String {
     use tachyonfx::dsl::CompletionEngine;
 
-    log_info(format!("source: {}, line: {}, column: {}", source, line, column));
+    log_info(format!(
+        "source: {}, line: {}, column: {}",
+        source, line, column
+    ));
 
     // Convert line/column to cursor index (byte offset)
     // Ace editor uses 0-indexed line/column, so convert to 1-indexed for our function
@@ -116,11 +119,9 @@ pub fn get_completions(source: &str, line: usize, column: usize) -> String {
         })
         .collect();
 
-
-
     // Log as JSON object for better browser console inspection
-    let js_value = serde_wasm_bindgen::to_value(&json_completions)
-        .unwrap_or_else(|_| JsValue::from_str("[]"));
+    let js_value =
+        serde_wasm_bindgen::to_value(&json_completions).unwrap_or_else(|_| JsValue::from_str("[]"));
     web_sys::console::log_2(&JsValue::from_str("completions:"), &js_value);
 
     // Return as JSON string for the caller

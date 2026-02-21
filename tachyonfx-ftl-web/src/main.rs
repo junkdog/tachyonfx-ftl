@@ -19,12 +19,14 @@ fn main() -> Result<()> {
     // globally set the sender for the JS interop functions
     init_global_state(sender.clone());
 
-    let terminal = terminal()?;
-    terminal.on_key_event(move |e| {
-        if !e.alt && !e.ctrl {
-            sender.dispatch(AppEvent::KeyPress(convert_key_event(e)));
-        }
-    });
+    let mut terminal = terminal()?;
+    terminal
+        .on_key_event(move |e| {
+            if !e.alt && !e.ctrl {
+                sender.dispatch(AppEvent::KeyPress(convert_key_event(e)));
+            }
+        })
+        .map_err(|e| eyre::eyre!("{e}"))?;
 
     let mut app = App::new(events.sender());
 

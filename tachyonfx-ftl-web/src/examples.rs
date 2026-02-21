@@ -380,7 +380,8 @@ mod basic {
         Example {
             id: "evolve",
             title: "Evolve",
-            description: "Versatile effect type using characters transformations through symbol sets",
+            description:
+                "Versatile effect type using characters transformations through symbol sets",
             category: Category::Transitions,
             code: indoc! {"
                 let content_area = Rect::new(12, 7, 80, 17);
@@ -916,7 +917,6 @@ mod geometry {
             canvas: canvas::DEFAULT,
         }
     }
-
 }
 
 mod canvas {
