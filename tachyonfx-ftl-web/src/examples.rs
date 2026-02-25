@@ -456,7 +456,7 @@ mod basic {
 
                 fx::paint(fg, bg, 1000)
                     .with_area(content_area)
-                    .with_pattern(DiagonalPattern::bottom_left_to_top_right(1))
+                    .with_pattern(DiagonalPattern::bottom_left_to_top_right())
             "},
             canvas: canvas::DEFAULT,
         }
